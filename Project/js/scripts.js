@@ -48,47 +48,27 @@ const arLocations = ['forest', 'desert', 'meadow', 'swamp', 'ruins'];
 const startLocations = {
     forest: {
         name: 'forest',
-<<<<<<< Updated upstream
-        description: 'A dark forest, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
-=======
         description: '<br>Around you, is a dark forest, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
->>>>>>> Stashed changes
         image: 'img/Forest.jpg'
     },
     desert: {
         name: 'desert',
-<<<<<<< Updated upstream
-        description: 'A hot desert, with sand dunes and cacti. You can hear the sound of the wind and the sand. You feel a hot breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
-=======
         description: '<br>You woke up with a sore throat in a hot desert, surrounded by sand dunes and cacti. You can hear the sound of the wind and the sand. You feel a hot breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
->>>>>>> Stashed changes
         image: 'img/Desert.jpg'
     },
     meadow: {
         name: 'meadow',
-<<<<<<< Updated upstream
-        description: 'A beautiful meadow, with flowers and grass. You can hear the sound of the wind, the birds and some animals. You feel a chill breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
-=======
         description: '<br>When you woke up, you were surrounded by a beautiful meadow, with flowers and lucious green grass. You can hear the sound of the wind, the birds and some animals. You feel a chill breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
->>>>>>> Stashed changes
         image: 'img/Meadow.jpeg'
     },
     swamp: {
         name: 'swamp',
-<<<<<<< Updated upstream
-        description: 'A dark swamp, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a chilling breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
-=======
         description: '<br>You find youself in a dark swamp, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a chilling breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
->>>>>>> Stashed changes
         image: 'img/Swamp.png'
     },
     ruins: {
         name: 'abandoned ruins',
-<<<<<<< Updated upstream
-        description: 'Abanonded ruins, totally overgrown with vines. You don\'t recognise any of the builidings, and wonder who built them... You can hear the sound of birds and insects, but you can\'t see anything. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
-=======
         description: '<br>When you woke up, you saw some ancient ruins, totally overgrown with vines. You don\'t recognise the style of the buildings, and wonder who built them and where you ended up... You can hear the sound of birds and insects, but can\'s see where it\'s coming from. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
->>>>>>> Stashed changes
         image: 'img/Ruins.jpg'
     }
 };
@@ -195,12 +175,8 @@ function chooseClass() {
     > irishman: ${playerClasses.irishman.description} <br>`);
     btnSubmit.addEventListener('click', function(e) {
         e.preventDefault();
-<<<<<<< Updated upstream
-        player = playerClasses[playerInput.value.toLowerCase()];  
-=======
         player = playerClasses[playerInput.value.toLowerCase()]; 
         addText('> ' + playerInput.value.toLowerCase()); 
->>>>>>> Stashed changes
         playerInput.value = '';
         updateStats(player);
         displayLocation(calculateLocation());
@@ -240,11 +216,7 @@ function changeLocation(imageLink) {
 
 }
 
-<<<<<<< Updated upstream
-
-=======
 /*
->>>>>>> Stashed changes
 function firstChoice() {
     addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it. \n');
     choice = playerInput.value.toLowerCase();
@@ -259,9 +231,5 @@ function firstChoice() {
         //changeLocation =>
         // secondChoice();
     }
-<<<<<<< Updated upstream
-}
-=======
 }
 */
->>>>>>> Stashed changes
