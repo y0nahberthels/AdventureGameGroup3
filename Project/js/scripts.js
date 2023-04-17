@@ -11,7 +11,7 @@ const exchangeItem = ['diamond', 'unobtanium', 'moon dust', 'titanium', 'gold', 
 const snack = ['kit kat', 'Bifi', 'chips', 'm&m', 'carrots', 'bell pepper', 'peanuts', 'cucumber', 'cheetohs', 'snickers'];
 const testshow = document.querySelector('#testshow');
 const textField = document.querySelector('#txt__bottom');
-const playerInput = document.querySelector('#playerInput')
+const playerInput = document.querySelector('#playerInput');
 
 const currentLocation = document.querySelector('#currentLocation');
 const healthpool = document.querySelector('#health');
@@ -19,8 +19,8 @@ const attack_points = document.querySelector('#attack_points');
 const defense_points = document.querySelector('#defense_points');
 const luck = document.querySelector('#luck');
 const btnSubmit = document.querySelector('#btnSubmit');
-const characterImage = document.querySelector('#character_image')
-const imgEnvironnement = document.querySelector('#imgEnvironnement')
+const characterImage = document.querySelector('#character_image');
+const imgEnvironnement = document.querySelector('#imgEnvironnement');
 
 
 
@@ -64,7 +64,7 @@ const startLocations = {
     swamp: {
         name: 'swamp',
         description: 'A dark swamp, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a chilling breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
-        image: 'img/Swamp.jpg'
+        image: 'img/Swamp.png'
     },
     ruins: {
         name: 'abandoned ruins',
@@ -152,7 +152,7 @@ function incomingDamage(danger) {
 }
 
 function addText(text) {
-    textField.innerHTML += `${text} \n`;
+    textField.innerHTML += `${text} <br>`;
 }
 
 storyLine();
@@ -168,12 +168,11 @@ function calculateLocation(){
 }
 
 function chooseClass() {
-    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer) 
-    warrior: ${playerClasses.warrior.description}|
-    paladin: ${playerClasses.paladin.description}|
-    adventurer: ${playerClasses.adventurer.description}|
-    irishman: ${playerClasses.irishman.description}
-    `);
+    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer) <br>
+    > warrior: ${playerClasses.warrior.description} <br>
+    > paladin: ${playerClasses.paladin.description} <br>
+    > adventurer: ${playerClasses.adventurer.description} <br>
+    > irishman: ${playerClasses.irishman.description} <br>`);
     btnSubmit.addEventListener('click', function(e) {
         e.preventDefault();
         player = playerClasses[playerInput.value.toLowerCase()];  
@@ -216,7 +215,7 @@ function changeLocation(imageLink) {
 
 }
 
-/*
+
 function firstChoice() {
     addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it. \n');
     choice = playerInput.value.toLowerCase();
@@ -232,4 +231,3 @@ function firstChoice() {
         // secondChoice();
     }
 }
-*/
