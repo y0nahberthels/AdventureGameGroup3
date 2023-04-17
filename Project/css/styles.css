@@ -1,0 +1,139 @@
+<<<<<<< Updated upstream
+=======
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+* {
+    font-family: 'VT323', sans-serif;
+}
+
+
+body {
+    background-color: black;
+    color: green;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 960px;
+}
+
+.wrapper {
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Text */
+
+p.txt__bottom {
+    display: flex;
+    /* position: absolute;
+    bottom: 0; */
+    background-color: rgba(128, 128, 128, 0.403);
+    padding: 10px 5px 10px 5px;
+}
+
+/* image */
+
+.img__place {
+    background-image: url(../img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: max-content;
+    border: 3px solid;
+}
+
+div.div__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.location {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: start;
+}
+
+.hidden {
+    display: none;
+}
+
+#currentLocation {
+    border: 3px solid green;
+    font-size: 1.5em;
+    font-weight: bold;
+    padding: 3px 10px 3px 10px;
+}
+
+#playerInput {
+    background-color: rgba(128, 128, 128, 0.403);
+    color: green;
+}
+
+#playerInput::before {
+    content: ">";
+    color: green;
+}
+
+#playerInput:focus {
+    outline: none;
+}
+
+#btnSubmit {
+    display: none;
+}
+
+.character__wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+img.character_image {
+    border: 2px solid;
+    height: auto;
+    max-width: 40%;
+}
+
+div.character {
+    align-items: start;
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -15px;
+}
+
+.stats p {
+    height: 1px;
+}
+
+.content__top {
+    display: flex;
+}
+
+.content__right {
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    border: solid 1px;
+}
+
+.inventory {
+    width: 100%;
+    margin: 10px;
+}
+
+.inventory p {
+    text-align: center;
+    border-bottom: solid 2px green;
+}
+>>>>>>> Stashed changes
