@@ -168,8 +168,8 @@ function calculateLocation(){
 }
 
 function chooseClass() {
-    addText("You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer)" + "\n" + 
-    `warrior: ${playerClasses.warrior.description}|
+    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer) 
+    warrior: ${playerClasses.warrior.description}|
     paladin: ${playerClasses.paladin.description}|
     adventurer: ${playerClasses.adventurer.description}|
     irishman: ${playerClasses.irishman.description}
