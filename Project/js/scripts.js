@@ -20,6 +20,9 @@ const defense_points = document.querySelector('#defense_points');
 const luck = document.querySelector('#luck');
 const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image')
+const imgEnvironnement = document.querySelector('#imgEnvironnement')
+
+
 
 let loc;
 const beasts = {
@@ -46,22 +49,27 @@ const startLocations = {
     forest: {
         name: 'forest',
         description: 'A dark forest, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        image: 'img/Forest.jpg'
     },
     desert: {
         name: 'desert',
         description: 'A hot desert, with sand dunes and cacti. You can hear the sound of the wind and the sand. You feel a hot breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        image: 'img/Desert.jpg'
     },
     meadow: {
         name: 'meadow',
         description: 'A beautiful meadow, with flowers and grass. You can hear the sound of the wind, the birds and some animals. You feel a chill breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        image: 'img/Meadow.jpeg'
     },
     swamp: {
         name: 'swamp',
         description: 'A dark swamp, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a chilling breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        image: 'img/Swamp.jpg'
     },
     ruins: {
         name: 'abandoned ruins',
         description: 'Abanonded ruins, totally overgrown with vines. You don\'t recognise any of the builidings, and wonder who built them... You can hear the sound of birds and insects, but you can\'t see anything. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        image: 'img/Ruins.jpg'
     }
 };
 
@@ -144,6 +152,7 @@ function incomingDamage(danger) {
 }
 
 function addText(text) {
+    textField.innerHTML = '';
     textField.innerHTML += `${text} \n`;
 }
 
@@ -151,29 +160,38 @@ storyLine();
 function storyLine() {
     // choose player class
     chooseClass();
+    changeLocation(startLocations.forest.image);
 }
 
 function calculateLocation(){
     loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]]
+    return loc;
 }
 
 function chooseClass() {
-    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer) \n`);
+    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer)
+    warrior: ${playerClasses.warrior.description}|
+    paladin: ${playerClasses.paladin.description}|
+    adventurer: ${playerClasses.adventurer.description}|
+    irishman: ${playerClasses.irishman.description}
+    `);
     btnSubmit.addEventListener('click', function(e) {
         e.preventDefault();
         player = playerClasses[playerInput.value.toLowerCase()];  
         playerInput.value = '';
         updateStats(player);
-        displayLocation();
+        displayLocation(calculateLocation());
         characterImage.src = player.sprite;
     })
 }
 
-function displayLocation() {
-            // calculate location and display it
-            calculateLocation();
-            addText(loc.description);
-            currentLocation.innerHTML = loc.name;
+function displayLocation(loc) {
+    console.log(loc);
+     // calculate location and display it
+     calculateLocation();
+    addText(loc.description);
+    currentLocation.innerHTML = loc.name;
+    imgEnvironnement.src = loc.image;
 }
 
 function updateStats(player) {
@@ -194,3 +212,25 @@ function updateStats(player) {
     defense_points.innerHTML = 'Defense: ' + player.vitality;
     luck.innerHTML = 'Luck: ' + player.luck;
 }
+
+function changeLocation(imageLink) {
+
+}
+
+/*
+function firstChoice() {
+    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it. \n');
+    choice = playerInput.value.toLowerCase();
+
+    if (choice.includes('left')) {
+        incomingDamage(1000);
+        addText($`I jump down the cliff. I land on a rock and die.
+        `);
+    }
+    else if (choice.includes('right')) {
+        addText('I follow the pathway. It leads to a forest. \n');
+        //changeLocation =>
+        // secondChoice();
+    }
+}
+*/

@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
 * {
     font-family: 'VT323', sans-serif;
 }
@@ -17,7 +18,7 @@ body {
 
 p.txt__bottom {
     display: flex;
-   /* position: absolute;
+    /* position: absolute;
     bottom: 0; */
     background-color: rgba(128, 128, 128, 0.403);
     padding: 10px 5px 10px 5px;
@@ -34,7 +35,7 @@ p.txt__bottom {
     border: 3px solid;
 }
 
-div.div__content{
+div.div__content {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -43,7 +44,7 @@ div.div__content{
 .location {
     display: flex;
     justify-content: start;
-    margin-right: 82%; 
+    margin-right: 82%;
 }
 
 .hidden {
@@ -57,7 +58,7 @@ div.div__content{
     padding: 3px 10px 3px 10px;
 }
 
-#playerInput{
+#playerInput {
     background-color: rgba(128, 128, 128, 0.403);
     color: green;
 }
@@ -74,7 +75,7 @@ img.character_image {
 }
 
 div.character {
-    align-items: flex-end;
+    align-items: start;
     display: flex;
     flex-direction: column;
 }
@@ -85,10 +86,16 @@ div.character {
 
 .content__right {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    border: solid 1px;
 }
 
- .character {
+.character {
     display: flex;
     flex-direction: row;
+    margin: 10px;
+}
+
+.inventory {
+    margin: 10px;
 }
