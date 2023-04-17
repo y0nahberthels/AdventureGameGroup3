@@ -10,8 +10,18 @@ const item = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube
 const exchangeItem = ['diamond', 'unobtanium', 'moon dust', 'titanium', 'gold', 'plutonium', 'antimatter', 'speed of light', 'Californium', 'Tritium'];
 const snack = ['kit kat', 'Bifi', 'chips', 'm&m', 'carrots', 'bell pepper', 'peanuts', 'cucumber', 'cheetohs', 'snickers'];
 const testshow = document.querySelector('#testshow');
-const textField = document.querySelector('.txt__bottom');
+const textField = document.querySelector('#txt__bottom');
+const playerInput = document.querySelector('#playerInput')
 
+const currentLocation = document.querySelector('#currentLocation');
+const healthpool = document.querySelector('#health');
+const attack_points = document.querySelector('#attack_points');
+const defense_points = document.querySelector('#defense_points');
+const luck = document.querySelector('#luck');
+const btnSubmit = document.querySelector('#btnSubmit');
+const characterImage = document.querySelector('#character_image')
+
+let loc;
 const beasts = {
     wolf: {
         name: 'wolf',
@@ -55,7 +65,7 @@ const startLocations = {
     }
 };
 
-const playerClass = {};
+let player = null;
 const playerClasses = {
     warrior: {
         name: 'warrior',
@@ -64,16 +74,20 @@ const playerClasses = {
         strength: '80',
         luck: '30',
         vitality:'30',
+        health: 100,
+        sprite: 'img/Warrior.png',
         weapons: ['sword', 'mace', 'great sword'],
         shield: ['round shield', 'square shield', 'great shield'],
     },
-    Paladin: {
+    paladin: {
         name: 'paladin',
         description:'a wise hermit with great magical knowledge',
         // 140 skillpoints to divide among stats
         strength: '30',
         luck: '30',
         vitality: '80',
+        health: 150,
+        sprite: 'img/Paladin.png',
         weapons: ['crystal staff', 'old wizards cane', 'magical sword'],
         shield: ['round shield', 'square shield', 'mystic shield'],
     },
@@ -84,6 +98,8 @@ const playerClasses = {
         strength: '30',
         luck: '80',
         vitality:'30',
+        health: 100,
+        sprite: 'img/Irishman.png',
         weapons: ['sword', 'mace', 'spear'],
         shield: ['round shield', 'square shield', 'lucky clover shield'],
     },
@@ -94,6 +110,8 @@ const playerClasses = {
         strength: '46',
         luck: '47',
         vitality:'47',
+        health: 120,
+        sprite: 'img/Adventurer.png',
         weapons: ['sword', 'mace', 'spear'],
         shield: ['round shield', 'square shield', 'adventurers shield'],
     }
@@ -110,23 +128,69 @@ function randomChance() {
 function outgoingDamage() {
     //critical hit calculator
     const critSucces = false;
-    if ((Math.round(((Math.random() * 100) + playerClass.player.luck)) / 2) >= 100 ) {
+    if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100 ) {
         critSucces = true;
     }
     //damage calculator
-    if (critSucces == false) {let damage = Math.round(Math.random * playerClass.player.strength)}
-    if (critSucces == true) {(Math.round(Math.random * playerClass.player.strength)) * 2}
+    if (critSucces == false) {let damage = Math.round(Math.random * player.strength)}
+    if (critSucces == true) {(Math.round(Math.random * player.strength)) * 2}
+}
+
+// danger is de max damage dat je kan krijgen, damage = 0 tot danger (niet tot en met)
+function incomingDamage(danger) {
+    let damage = Math.round(Math.random() * danger);
+    player.health -= damage;
+    updateStats(player);
 }
 
 function addText(text) {
-    textField.innerHTML += text
+    textField.innerHTML += `${text} \n`;
 }
 
-function storyLine()
-    // bij begin de innerhtml clearen
-    textField.innerHTML = '';
-    
-    // playerklasse kiezen
-    addText(testtekst);
-    textField.innerHTML = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]].description;
+storyLine();
+function storyLine() {
+    // choose player class
+    chooseClass();
+}
+
+function calculateLocation(){
+    loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]]
+}
+
+function chooseClass() {
+    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer) \n`);
+    btnSubmit.addEventListener('click', function(e) {
+        e.preventDefault();
+        player = playerClasses[playerInput.value.toLowerCase()];  
+        playerInput.value = '';
+        updateStats(player);
+        displayLocation();
+        characterImage.src = player.sprite;
+    })
+}
+
+function displayLocation() {
+            // calculate location and display it
+            calculateLocation();
+            addText(loc.description);
+            currentLocation.innerHTML = loc.name;
+}
+
+function updateStats(player) {
+    healthpool.innerHTML = ''
+    if (player.health > 0) {
+        healthpool.innerHTML = 'Health: ' + player.health;
+    }
+    if (player.health < 0) {
+        console.log('death')
+        healthpool.innerHTML = 'dead';
+    }
+    // empty stats
+    attack_points.innerHTML = '';
+    defense_points.innerHTML = '';
+    luck.innerHTML = '';
+    // fill in stats
+    attack_points.innerHTML = 'Attack: ' + player.strength;
+    defense_points.innerHTML = 'Defense: ' + player.vitality;
+    luck.innerHTML = 'Luck: ' + player.luck;
 }

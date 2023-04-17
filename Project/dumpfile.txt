@@ -1,3 +1,60 @@
 const intTest = Math.round(Math.random() * (playerClasses.warrior.shield.length - 1))
 console.log(intTest);
 testshow.innerHTML = playerClasses.warrior.shield[intTest];
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/styles.css">
+    <title>Project Adventure Game</title>
+</head>
+
+<body>
+    <main>
+        <p id="testshow"></p>
+        <div class="div__content">
+            <div class="content__left">
+                <!-- <div class="div__img">
+                    <img class="img__place" src="img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg" alt="environment">
+                </div> -->
+
+            </div>
+            <div class="content__right"></div>
+            <div class="location">
+                <p id="currentLocation"></p>
+            </div>
+            <div class="character">
+                <img class="character_image" src="#" alt="character sprite">
+                <div class="stats">
+                    <p id="health"></p>
+                    <p id="attack_points"></p>
+                    <p id="defense_points"></p>
+                </div>
+            </div>
+            <div class="inventory">
+                <p>Inventory</p>
+                <div id="inventoryContent">
+                </div>
+            </div>
+
+            <div class="div__img">
+                <img class="img__place" src="img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg" alt="environment">
+            </div>
+
+            <div class="div__txt">
+                <p class="txt__bottom" id="txt__bottom"></p>
+            </div>
+            <input type="text" id="playerInput">
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+    <script src="js/scripts.js"></script>
+</body>
+
+</html>

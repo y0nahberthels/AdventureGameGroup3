@@ -12,16 +12,43 @@
 <body>
     <main>
         <p id="testshow"></p>
-        <div class="div__img">
-            <img class="img__place" src="img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg" alt="">
-        </div>
-        <div class="div__txt">
-            <p class="txt__bottom">It allowance prevailed enjoyment in it. Calling observe for who pressed raising his. Can connection
-                instrument astonished unaffected his motionless preference. Announcing say boy precaution unaffected
-                difficulty alteration him. Above be would at so going heard. Engaged at village at am equally proceed.
-                Settle nay length almost ham direct extent. Agreement for listening remainder get attention law
-                acuteness day. Now whatever surprise resolved elegance indulged own way outlived.
-            </p>
+        <div class="div__content">
+            <div class="content__top">
+                <div class="content__left">
+                    <div class="location">
+                        <p id="currentLocation"></p>
+                    </div>
+                    <div class="div__img">
+                        <img class="img__place" src="img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg" alt="environment">
+                    </div>
+                </div>
+                <div class="content__right">
+                    <div class="character">
+                        <img class="character_image" src="" id="character_image" alt="character sprite">
+                        <div class="stats">
+                            <p id="health"></p>
+                            <p id="attack_points"></p>
+                            <p id="defense_points"></p>
+                            <p id="luck"></p>
+                        </div>
+                    </div>
+                    <div class="inventory">
+                        <p>Inventory</p>
+                        <div id="inventoryContent">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content__bottom">
+                <div class="div__txt">
+                    <p class="txt__bottom" id="txt__bottom"></p>
+                </div>
+                <form>
+                    <input type="text" id="playerInput">
+                    <button id="btnSubmit">Sumbit</button>
+                </form>
+            </div>
+
         </div>
     </main>
     <footer>
