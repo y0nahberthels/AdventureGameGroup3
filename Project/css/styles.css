@@ -1,7 +1,29 @@
-* {
-    background-color: antiquewhite;
+body {
+    background-color: black;
+    color: green;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 960px;
 }
 
-body {
-    
+/* Text */
+
+p.txt__bottom {
+    display: flex;
+   /* position: absolute;
+    bottom: 0; */
+    background-color: rgba(128, 128, 128, 0.403);
+    padding: 10px 5px 10px 5px;
 }
+
+/* image */
+
+img.img__place {
+    background-image: url(../img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: max-content;
+}
+
