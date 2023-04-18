@@ -34,6 +34,8 @@ let afterchallenge1 = false;
 let challenge1Solved = false;
 let challenge1TryCounter = 5;
 let afterchallenge2 = false;
+let challenge2Solved = false;
+let challenge2TryCounter = 5;
 
 
 let loc;
@@ -464,27 +466,48 @@ function firstChallengePart2() {
     afterchallenge1 = true;
 }
 
-function secondChallenge(){
+function secondChallengePart(){
     addText(`<br> Hola amigo. I have a challenge for you. Don\t worry, it\'s not too hard.
-    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of course. No accents, no capital letters. Just the number.)`);
+    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of course. No accents, no capital letters. Just the number. If you failed, translate 'six'.)`);
     let answer;
     switch (challenge1TryCounter) {
         case 5:
-            answer = 'cinco';
+            answer = 'uno';
             break;
         case 4:
-            answer = 'cuatro';
+            answer = 'dos';
             break;
         case 3:
             answer = 'tres';
             break;
         case 2:
-            answer = 'dos';
+            answer = 'quatro';
             break;
         case 1:
-            answer = 'uno';
+            answer = 'cinco';
         case 0:
-            answer = 'cero';
+            answer = 'seis';
             break;
     }
+
+    choice = playerInput.value.toLowerCase();
+    if (choice.toLowerCase() == answer) {
+        challenge2Solved = true;
+    }
+    if (playerInput.value.toLowerCase() != answer){
+        challenge2TryCounter--;
+        addText('<br> Equivocado! Please try again.');
+        addText(`you have ${challenge2TryCounter} tries left`)
+    }
+    if (challenge2TryCounter == 0) {
+        challenge2Solved = true;
+        addText('<br>AY CARAMBA! puzzle bypassed by too low intellingence');
+    }
+
+    const reward = items[Math.floor(Math.random() * (items.length - 1))]
+    items.splice(items.indexOf(reward), 1);
+    player.items.push(reward);
+    updateStats();
+    addText(`<br> Bravo! You have certainly earned your reward: ${reward}!`);
+    afterchallenge1 = true;
 }
