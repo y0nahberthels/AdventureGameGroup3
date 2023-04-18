@@ -5,7 +5,7 @@ const homeLocations = [''];
 const npcUrban = [];
 const npcMine = [];
 const savedProperties = [];
-const item = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eye liner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
+const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
 const exchangeItem = ['diamond', 'unobtanium', 'moon dust', 'titanium', 'gold', 'plutonium', 'antimatter', 'speed of light', 'Californium', 'Tritium'];
 const snack = ['kit kat', 'Bifi', 'chips', 'm&m', 'carrots', 'bell pepper', 'peanuts', 'cucumber', 'cheetohs', 'snickers'];
 const testshow = document.querySelector('#testshow');
@@ -20,11 +20,20 @@ const luck = document.querySelector('#luck');
 const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image');
 const imgEnvironnement = document.querySelector('#imgEnvironnement');
+const playerInventory = document.querySelector('#inventoryContent');
+
 let proceedToUrban = false;
 let choice;
 let afterChooseClass = false;
 let afterChoice1 = false;
 let afterChoice2 = false;
+let afterChoice3 = false;
+let afterchallenge1Part1 = false;
+let afterchallenge1Part2 = false;
+let afterchallenge1 = false;
+let challenge1Solved = false;
+let challenge1TryCounter = 5;
+let afterchallenge2 = false;
 
 
 let loc;
@@ -54,7 +63,7 @@ const beasts = {
         health: '90',
     }
 };
-const urbanDestinationsAr = ['Medieval town', 'Steampunk city', 'Elven Land' ,'Dwarven village'];
+const urbanDestinationsAr = ['medievalTown', 'steampunkCity', 'elvenLand' ,'dwarvenVillage'];
 const urbanDestinations = {
     medievalTown: {
         name: 'medieval town',
@@ -70,7 +79,7 @@ const urbanDestinations = {
         img: 'img/elvenLand.jpeg'},
     dwarvenVillage: {
         name: 'dwarven village',
-        description: '<br> After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.',
+        description: '<br> After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.  ',
         img: 'img/dwarvenVillage.webp'},
 };
 
@@ -118,8 +127,9 @@ const playerClasses = {
         vitality:'30',
         health: 100,
         sprite: 'img/Warrior.png',
-        weapons: ['sword', 'mace', 'great sword'],
-        shield: ['round shield', 'square shield', 'great shield'],
+        weapon: 'great sword',
+        shield: 'great shield',
+        items: [],
     },
     paladin: {
         name: 'paladin',
@@ -130,8 +140,9 @@ const playerClasses = {
         vitality: '80',
         health: 150,
         sprite: 'img/Paladin.png',
-        weapons: ['crystal staff', 'old wizards cane', 'magical sword'],
-        shield: ['round shield', 'square shield', 'mystic shield'],
+        weapon: 'crystal staff',
+        shield: 'mystic shield',
+        items: [],
     },
     irishman: {
         name: 'irishman',
@@ -142,8 +153,9 @@ const playerClasses = {
         vitality:'30',
         health: 100,
         sprite: 'img/Irishman.png',
-        weapons: ['sword', 'mace', 'spear'],
-        shield: ['round shield', 'square shield', 'lucky clover shield'],
+        weapon: 'mace',
+        shield: 'lucky clover shield',
+        items: [],
     },
     adventurer: {
         name: 'adventurer',
@@ -154,10 +166,17 @@ const playerClasses = {
         vitality:'47',
         health: 120,
         sprite: 'img/Adventurer.png',
-        weapons: ['sword', 'mace', 'spear'],
-        shield: ['round shield', 'square shield', 'adventurers shield'],
+        weapon: 'spear',
+        shield: 'adventurers shield',
+        items: [],
     }
 };
+
+function closeWindow(event) {
+    event.preventDefault();
+    window.open('https://www.google.com', '_self', '');
+    window.close();
+}
 
 function randomChance() {
     const succes = false;
@@ -186,9 +205,8 @@ function incomingDamage(danger) {
 }
 
 function addText(text) {
-    textField.innerHTML += `${text} <br>`;
+    textField.innerHTML += `<br>${text} `;
 }
-
 
 function storyLine() {
     // choose player class
@@ -200,24 +218,46 @@ function storyLine() {
 }
 
 function calculateLocation(){
-    loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]]
+    console.log('urbanDestinationsAr'+urbanDestinationsAr)
+    loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]];
     return loc;
 }
 
 chooseClass();
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
-    textField.innerHTML = '';
+    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && challenge1Solved == false) {
+        firstChallengePart1();
+        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && challenge1Solved == true && afterchallenge1 == false) {
+            firstChallengePart2();
+            if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && afterchallenge2 == false) {
+                secondChallenge();
+            }
+        }
+    }
     if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == false) {
+        console.log('keuze 2 bereikt');
         secondChoice();
+        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == false) {
+            console.log('keuze 3 bereikt');
+            thirdChoice();
+        }
     }
     if (afterChooseClass == true && afterChoice1 == false) {
-        console.log('keuze 1 bereikt')
+        console.log('keuze 1 bereikt');
         firstChoice();
     }
     if(afterChooseClass == false) {
         assignClass(e);
     }
+    if (playerInput.value == 'kill') {
+        killPlayer();
+    }
+    playerInput.value = '';
+    console.log('afterchooseClass:'+afterChooseClass);
+    console.log('afterChoice1:'+ afterChoice1);
+    console.log('afterChoice2:' + afterChoice2);
+    console.log('afterChoice3:' + afterChoice3);
 })
 
 function assignClass(e) {
@@ -234,11 +274,11 @@ function assignClass(e) {
 }
 
 function chooseClass() {
-    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer) <br>
-    > warrior: ${playerClasses.warrior.description} <br>
-    > paladin: ${playerClasses.paladin.description} <br>
-    > adventurer: ${playerClasses.adventurer.description} <br>
-    > irishman: ${playerClasses.irishman.description} <br>`);
+    addText(`You wake up and remember who you are (Warrior, Paladin, Irishman or Adventurer)
+    <br>> warrior: ${playerClasses.warrior.description} 
+    <br>> paladin: ${playerClasses.paladin.description} 
+    <br>> adventurer: ${playerClasses.adventurer.description} 
+    <br>> irishman: ${playerClasses.irishman.description}`);
 }
 
 function displayLocation(loc) {
@@ -256,8 +296,9 @@ function updateStats() {
     if (player.health > 0) {
         healthpool.innerHTML = 'Health: ' + player.health;
     } else {
-        console.log('death' + 'player.health:' + player.health)
         healthpool.innerHTML = 'You died!';
+        // location.replace gevonden op https://www.tutorialspoint.com/How-to-redirect-to-another-webpage-using-JavaScript
+        location.replace('deathscherm.html');
     }
     // empty stats
     attack_points.innerHTML = '';
@@ -267,6 +308,14 @@ function updateStats() {
     attack_points.innerHTML = 'Strength: ' + player.strength;
     defense_points.innerHTML = 'Vitality: ' + player.vitality;
     luck.innerHTML = 'Luck: ' + player.luck;
+
+    //update inventory
+    if (player.items.length > 0) {
+        playerInventory.innerHTML = '';
+        for (let i = 0; i < player.items.length; i++) {
+            playerInventory.innerHTML += '<br>' + player.items[i];
+        }
+    }
 }
 
 //function changeLocation(imageLink) {}
@@ -276,9 +325,10 @@ function phaseOne() {
    // changeLocation();
 }
 
+
 function firstChoice() {
     do {
-    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it. <br>');
+    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
     } while (checkcommand(['left', 'right']) == false);
     let choice = playerInput.value.toLowerCase();
     console.log('choice:'+choice);
@@ -295,11 +345,11 @@ function firstChoice() {
         //changeLocation
         imgEnvironnement.src = crossRoads.img;
         // secondChoice();
-        addText(`4 options present themselves: <br>
-        > beast: A hungry beast. Maybe I can sneak past it. <br>
-        > river: A poisonous river. I can see a sloop, though it does not look very sturdy. <br>
-        > cliff: A steep cliff. There is a bridge, but it looks like it might break if I try to cross it. <br>
-        > desert: A seemingly endless desert. I don\'t see any enemies, but I probably don\'t have any water on me ....<br>`);
+        addText(`4 options present themselves: 
+        <br>> beast: A hungry beast. Maybe I can sneak past it. 
+        <br>> river: A poisonous river. I can see a sloop, though it does not look very sturdy. 
+        <br>> cliff: A steep cliff. There is a bridge, but it looks like it might break if I try to cross it. 
+        <br>> desert: A seemingly endless desert. I don\'t see any enemies, but I probably don\'t have any water on me ....`);
         afterChoice1 = true;
         return;
     }
@@ -328,33 +378,93 @@ function killPlayer(){
 }
 
 function secondChoice() {
-    if(checkcommand(['beast', 'cliff', 'desert', 'river'])){
         choice = playerInput.value.toLowerCase();
         console.log(choice);
+        addText(`<br> > ${choice} `);
         if (choice.includes('beast')) {
-            addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
+            addText('<br>I try to sneak past the beast. It sees me and attacks me. I die. ');
             killPlayer(); // kill the player
-            return;
         }
-        if (choice.includes('river')) {
-            addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... <br>');
+        else if (choice.includes('river')) {
+            addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... You took some damage');
             player.health -= player.health/2; // removes 1/2 of the player HP
+            updateStats();
             proceedToUrban = true;
-            return;
-        }
-        if (choice.includes('cliff')) {
-            addText('I try to cross the bridge. It breaks as soon as I set foot on land, but luckily I remain unharmed. <br>');
+
+        } 
+        else if (choice.includes('cliff')) {
+            addText('I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. You took some damage.');
             player.health -= player.health/8; // removes 1/8 of the player HP
+            updateStats();
             proceedToUrban = true;
-            return;
+
         }
-        if (choice.includes('desert')) {
-            addText('I try to cross the desert. I run out of water a lot earlier than expected. I surive by the skin of my teeth. <br>');
+        else if (choice.includes('desert')) {
+            addText('I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. You took some damage');
             player.health -= player.health/4; // removes 1/4 of the player HP
+            updateStats();
             proceedToUrban = true;
-            return;
         }
+        updateStats();
+            
+        // display random new location
+        console.log(urbanDestinations);
+        const randomLocation = urbanDestinationsAr[Math.floor(Math.random() * (urbanDestinationsAr.length - 1))];
+        console.log(randomLocation);
+        const urbanLoc = urbanDestinations[randomLocation];
+        console.log(urbanLoc);
+        imgEnvironnement.src = urbanLoc.img;
+        currentLocation.innerHTML = urbanLoc.name;
+        addText(urbanLoc.description);
+        playerInput.value = '';
         afterChoice2 = true;
-    }
 };
 
+function thirdChoice() {
+    addText(`I feel a cold hand on my shoulder: "I have never seen you around here, traveler", an old woman with a mysterious aura says to me. 
+    <br>"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."
+    <br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
+    <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found*`);
+
+    // initiate challange 1
+    currentLocation.innerHTML = 'Challenge 1: Sudoku';
+    imgEnvironnement.src = 'img/sudoku.png';
+    addText(`<br> Fill in the missing X\'s, find the missing word and you will be rewarded.
+    <br> Enter the numbers from left to right, top to bottom.
+    <br> +-----------------------------------+
+    <br> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+    <br> +-----------------------------------+
+    <br> | A | B | C | D | E | F | G | H | I |
+    <br> +-----------------------------------+`);
+    afterChoice3 = true;
+}
+
+function firstChallengePart1() {
+    choice = playerInput.value.toLowerCase();
+    if (choice.toLowerCase() == 'dead') {
+        challenge1Solved = true;
+    }
+    if (playerInput.value.toLowerCase() != 'dead'){
+        challenge1TryCounter--;
+        addText('<br> Wrong! Please try again.');
+        addText(`you have ${challenge1TryCounter} tries left`)
+    }
+    if (challenge1TryCounter == 0) {
+        challenge1Solved = true;
+    addText('<br>ERROR: puzzle bypassed by too low intellingence');
+    }
+}
+
+function firstChallengePart2() {
+    const reward = items[Math.floor(Math.random() * (items.length - 1))]
+    items.splice(items.indexOf(reward), 1);
+    player.items.push(reward);
+    updateStats();
+    addText(`<br> Correct! You have earned your reward: ${reward}. Continue with your journey, youngling!`);
+    afterchallenge1 = true;
+}
+
+function secondChallenge(){
+    addText(`<br> Hola amigo. I have a challenge for you. Don\t worry, it\'s not too hard.
+    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of course :)`);
+}

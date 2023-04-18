@@ -1,9 +1,12 @@
 # AdventureGameGroup3
 
 Todo: 
-- currentlocation is aligned, but not in the correct way.
-- vorige tekst niet verwijderen
+- currentlocation is aligned, but not in the correct way. ✓
+- vorige tekst niet verwijderen ✓
 - <br> niet meer gebruiken
+- text letter per letter laten verschijnen ✘ zal waarschijnlijk niet lukken, te geavanceerd
+- checkCommand herwerken 
+- CSS autoscroll naar beneden
 
 Optioneel:
 - gif met idle animatie in plaats van statische tekst

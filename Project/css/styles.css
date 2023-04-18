@@ -19,8 +19,11 @@ p.txt__bottom {
     display: flex;
     /* position: absolute;
     bottom: 0; */
+    max-height: 40vh;
     background-color: rgba(128, 128, 128, 0.403);
     padding: 10px 5px 10px 5px;
+    overflow: auto;
+    scroll-behavior: initial;
 }
 
 strong {
@@ -176,6 +179,34 @@ ul {
 body {
     animation: transitionOpen 1s;
 }
+
+/* The End */
+
+.p__end {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* GAME OVER */
+.ul__gameover {
+    display: flex;
+}
+
+.navlist__linkStop{
+    color: red;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 3px solid;
+    cursor: pointer
+}
+.navlist__linkStop:hover {
+    color: black;
+    background-color: red;
+    border: 3px solid;
+    transition: background 0.3s , color 00.3s;
+}
+
+
 
 @keyframes transitionOpen {
     from {
