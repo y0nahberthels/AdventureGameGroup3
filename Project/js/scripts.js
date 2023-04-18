@@ -466,5 +466,25 @@ function firstChallengePart2() {
 
 function secondChallenge(){
     addText(`<br> Hola amigo. I have a challenge for you. Don\t worry, it\'s not too hard.
-    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of course :)`);
+    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of course. No accents, no capital letters. Just the number.)`);
+    let answer;
+    switch (challenge1TryCounter) {
+        case 5:
+            answer = 'cinco';
+            break;
+        case 4:
+            answer = 'cuatro';
+            break;
+        case 3:
+            answer = 'tres';
+            break;
+        case 2:
+            answer = 'dos';
+            break;
+        case 1:
+            answer = 'uno';
+        case 0:
+            answer = 'cero';
+            break;
+    }
 }
