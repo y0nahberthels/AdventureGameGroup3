@@ -58,3 +58,17 @@ testshow.innerHTML = playerClasses.warrior.shield[intTest];
 </body>
 
 </html>
+
+    btnSubmit.addEventListener('click', function(e) {
+        e.preventDefault();
+        let playerChoice = playerInput.value.toLowerCase();
+        player = playerClasses[playerChoice]; 
+        console.log('playerlog1:' + player);
+        console.log('playerlog2:' + player);
+        addText('> ' + playerChoice); 
+        playerInput.value = '';
+        updateStats();
+        displayLocation(calculateLocation());
+        characterImage.src = player.sprite;
+        afterChooseClass = true;
+    })

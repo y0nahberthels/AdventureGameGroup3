@@ -1,7 +1,6 @@
 'use strict';
 
 // define arrays with needed variables
-const urbanDestinations = ['Medieval town', 'Steampunk city', 'Elven Land' ,'Dwarven village'];
 const homeLocations = [''];
 const npcUrban = [];
 const npcMine = [];
@@ -21,29 +20,59 @@ const luck = document.querySelector('#luck');
 const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image');
 const imgEnvironnement = document.querySelector('#imgEnvironnement');
-
+let proceedTouUrban = false;
+let afterChooseClass = false;
+let afterChoice1 = false;
 
 
 let loc;
 const beasts = {
     wolf: {
         name: 'wolf',
-        description: 'A giant wolf, with sharp teeth and claws. It looks hungry.'
+        description: 'A giant wolf, with sharp teeth and claws. It looks hungry.',
+        danger: '30',
+        health: '100',
     },
     troll: {
         name: 'troll',
-        description: 'A menacing troll with a giant club, stained with blood. Will I be its next victim?'
+        description: 'A menacing troll with a giant club, stained with blood. Will I be its next victim?',
+        danger: '40',
+        health: '110',
     },
     dragon: {
         name: 'dragon',
-        description: 'A huge red dragon, with a fiery breath. It\'s surrounded by bones of its victims.'
+        description: 'A huge red dragon, with a fiery breath. It\'s surrounded by bones of its victims.',
+        danger: '60',
+        health: '120',
     },
     crocodile: {
         name: 'crocodile',
-        description: 'A huge crocodile, so big I can barely believe my eyes. It can, without a doubt, swallow me whole.'
+        description: 'A huge crocodile, so big I can barely believe my eyes. It can, without a doubt, swallow me whole.',
+        danger: '20',
+        health: '90',
     }
 };
+const urbanDestinationsAr = ['Medieval town', 'Steampunk city', 'Elven Land' ,'Dwarven village'];
+const urbanDestinations = {
+    medievalTown: {
+        name: 'medieval town',
+        description: '<br> After a tough journey, you arrive in a medieval town, with cobblestone streets and old buildings. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.'},
+    steampunkCity: {
+        name: 'steampunk city',
+        description: '<br> After a tough journey, you arrive in a steampunk city, with old buildings and lots ofsteam engines. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.'},
+    elvenLand: {
+        name: 'elven land',
+        description: '<br> After a tough journey, you arrive in a elven land. You have heard a lot of stories about them, but never seen them. You look at the scene in awe. All the elves working together harmoniously is an oddly satisfying thing to watch. You order a meal, and after eating some delicious specialities, you decide to continue your journey.'},
+    dwarvenVillage: {
+        name: 'dwarven village',
+        description: '<br> After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.'}
+};
 
+
+const crossRoads = {
+    name: 'crossroads',
+    img: 'img/Crossroads.png',
+};
 const arLocations = ['forest', 'desert', 'meadow', 'swamp', 'ruins'];
 const startLocations = {
     forest: {
@@ -148,7 +177,7 @@ function outgoingDamage() {
 function incomingDamage(danger) {
     let damage = Math.round(Math.random() * danger);
     player.health -= damage;
-    updateStats(player);
+    updateStats();
 }
 
 function addText(text) {
@@ -160,11 +189,38 @@ function storyLine() {
     // choose player class
     chooseClass();
     changeLocation(startLocations.forest.image);
+    if (afterChooseClass == true) {
+        phaseOne();
+    }
 }
 
 function calculateLocation(){
     loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]]
     return loc;
+}
+
+btnSubmit.addEventListener('click', function(e) {
+    e.preventDefault();
+    if (afterChooseClass == true || afterChoice1 == false) {
+        console.log('keuze 1 bereikt')
+        firstChoice();
+    }
+    if(afterChooseClass == false) {
+        assignClass(e);
+    }
+})
+
+function assignClass(e) {
+    let playerChoice = playerInput.value.toLowerCase();
+    player = playerClasses[playerChoice]; 
+    console.log('playerlog1:' + player);
+    console.log('playerlog2:' + player);
+    addText('> ' + playerChoice); 
+    playerInput.value = '';
+    updateStats();
+    displayLocation(calculateLocation());
+    characterImage.src = player.sprite;
+    afterChooseClass = true;
 }
 
 function chooseClass() {
@@ -173,42 +229,33 @@ function chooseClass() {
     > paladin: ${playerClasses.paladin.description} <br>
     > adventurer: ${playerClasses.adventurer.description} <br>
     > irishman: ${playerClasses.irishman.description} <br>`);
-    btnSubmit.addEventListener('click', function(e) {
-        e.preventDefault();
-        player = playerClasses[playerInput.value.toLowerCase()]; 
-        addText('> ' + playerInput.value.toLowerCase()); 
-        playerInput.value = '';
-        updateStats(player);
-        displayLocation(calculateLocation());
-        characterImage.src = player.sprite;
-    })
 }
 
 function displayLocation(loc) {
-    console.log(loc);
-     // calculate location and display it
-     calculateLocation();
+    console.log('loc:'+loc);
+    // calculate location and display it
+    calculateLocation();
     addText(loc.description);
     currentLocation.innerHTML = loc.name;
     imgEnvironnement.src = loc.image;
 }
 
-function updateStats(player) {
-    healthpool.innerHTML = ''
+function updateStats() {
+    healthpool.innerHTML = '';
+    console.log('player.health:'+ player.health);
     if (player.health > 0) {
         healthpool.innerHTML = 'Health: ' + player.health;
-    }
-    if (player.health < 0) {
-        console.log('death')
-        healthpool.innerHTML = 'dead';
+    } else {
+        console.log('death' + 'player.health:' + player.health)
+        healthpool.innerHTML = 'You died!';
     }
     // empty stats
     attack_points.innerHTML = '';
     defense_points.innerHTML = '';
     luck.innerHTML = '';
     // fill in stats
-    attack_points.innerHTML = 'Attack: ' + player.strength;
-    defense_points.innerHTML = 'Defense: ' + player.vitality;
+    attack_points.innerHTML = 'Strength: ' + player.strength;
+    defense_points.innerHTML = 'Vitality: ' + player.vitality;
     luck.innerHTML = 'Luck: ' + player.luck;
 }
 
@@ -216,20 +263,78 @@ function changeLocation(imageLink) {
 
 }
 
-/*
-function firstChoice() {
-    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it. \n');
-    choice = playerInput.value.toLowerCase();
+function phaseOne() {
+    firstChoice();
+}
 
+function firstChoice() {
+    do {
+    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it. <br>');
+    } while (checkcommand(['left', 'right']) == false);
+    let choice = playerInput.value.toLowerCase();
+    console.log('choice:'+choice);
     if (choice.includes('left')) {
+        console.log('player before 1k dam:'+player);
         incomingDamage(1000);
-        addText($`I jump down the cliff. I land on a rock and die.
-        `);
+        console.log('player after 1k dam'+player);
+        addText(`I jump down the cliff. I land head first on a rock and die. \n`);
+        // todo herstart
+        return;
     }
-    else if (choice.includes('right')) {
-        addText('I follow the pathway. It leads to a forest. \n');
+    if (choice.includes('right')) {
+        addText('I follow the pathway. After a while I arrive at a crossroads. \n');
         //changeLocation =>
         // secondChoice();
+        return;
     }
 }
-*/
+
+function checkcommand(args) {
+    btnSubmit.addEventListener('click', function(e) {
+      e.preventDefault();
+      args.forEach(argument => {
+        if (playerInput.value == argument) {
+          console.log('correct command');
+          return true;
+        }
+      });
+    return false;
+    });
+  }
+
+function goBack() {
+    // locale hub = variabele waarnaar teruggekeerd kan worden
+}
+
+function secondChoice() {
+    addText(`4 options present themselves: <br>
+    > A hungry beast. Maybe I can sneak past it. <br>
+    > A poisonous river. I can see a sloop, though it does not look very sturdy. <br>
+    > A steep cliff. There is a bridge, but it looks like it might break if I try to cross it. <br>
+    > A dessert. I don\'t see any enemies, but I don\'t have any water on me ....<br>`);
+
+    if(checkcommand(['beast', 'cliff', 'desert', 'river'])){
+        switch (playerInput.value.toLowerCase()) {
+            case 'beast': 
+                addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
+                incomingDamage(1000); // kill the player
+                break;
+            case 'cliff': 
+                addText('I try to cross the bridge. It breaks as soon as I set foot on land, but luckily I remain unharmed. <br>');
+                player.health -= player.health/8; // removes 1/8 of the player HP
+                proceedTouUrban = true;
+                break;
+            case 'desert': 
+                addText('I try to cross the desert. I run out of water a lot earlier than expected. I surive by the skin of my teeth. <br>');
+                player.health -= player.health/4; // removes 1/4 of the player HP
+                proceedTouUrban = true;
+                break;
+            case 'river': 
+                addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... <br>');
+                player.health -= player.health/2; // removes 1/2 of the player HP
+                proceedTouUrban = true;
+                break;
+        }
+    }
+};
+

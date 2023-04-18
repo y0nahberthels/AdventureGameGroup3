@@ -44,7 +44,7 @@ div.div__content {
     display: none;
 }
 
-#currentLocation {
+#currentLocation, .navlist__item {
     border: 3px solid green;
     font-size: 1.5em;
     font-weight: bold;
@@ -126,4 +126,66 @@ div.character {
 
 #currentLocation {
     margin: 0 5px;
+}
+
+/* logo */
+
+.img__logo {
+    width: max-content;
+}
+
+.div__logo {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.navlist__link {
+    color: green;
+    text-decoration: none;
+    padding: 5px 10px;
+    border: 3px solid;
+    cursor: pointer
+}
+
+li.navlist__item {
+    list-style: none;
+    border: none;
+}
+
+.navlist__link:hover {
+    color: black;
+    background-color: green;
+    border: 3px solid;
+    transition: background 0.3s , color 00.3s;
+}
+
+.navlist__link:active{
+animation: transitionClose 1s;
+}
+
+ul {
+    padding: 0
+}
+
+body {
+    animation: transitionOpen 1s;
+}
+
+@keyframes transitionOpen {
+    from {
+        opacity: 0;
+    }    
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes transitionClose {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
