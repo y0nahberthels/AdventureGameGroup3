@@ -40,14 +40,6 @@ div.div__content {
     align-items: center;
 }
 
-.location {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: start;
-}
-
 .hidden {
     display: none;
 }
@@ -126,4 +118,12 @@ div.character {
 .inventory p {
     text-align: center;
     border-bottom: solid 2px green;
+}
+
+.content__left {
+    display: flex;
+}
+
+#currentLocation {
+    margin: 0 5px;
 }
