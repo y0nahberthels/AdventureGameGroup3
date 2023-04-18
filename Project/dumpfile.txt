@@ -72,3 +72,25 @@ testshow.innerHTML = playerClasses.warrior.shield[intTest];
         characterImage.src = player.sprite;
         afterChooseClass = true;
     })
+
+    choice = playerInput.value.toLowerCase();
+        switch (choice) {
+            case 'beast': 
+                addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
+                killPlayer(); // kill the player
+                break;
+            case 'cliff': 
+                addText('I try to cross the bridge. It breaks as soon as I set foot on land, but luckily I remain unharmed. <br>');
+                player.health -= player.health/8; // removes 1/8 of the player HP
+                proceedTouUrban = true;
+                break;
+            case 'desert': 
+                addText('I try to cross the desert. I run out of water a lot earlier than expected. I surive by the skin of my teeth. <br>');
+                player.health -= player.health/4; // removes 1/4 of the player HP
+                proceedTouUrban = true;
+                break;
+            case 'river': 
+                addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... <br>');
+                player.health -= player.health/2; // removes 1/2 of the player HP
+                proceedTouUrban = true;
+                break;

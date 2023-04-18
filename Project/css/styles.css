@@ -23,6 +23,11 @@ p.txt__bottom {
     padding: 10px 5px 10px 5px;
 }
 
+strong {
+    color: white;
+    font-weight: bold;
+}
+
 /* image */
 
 .img__place {
@@ -188,4 +193,9 @@ body {
     to {
         opacity: 0;
     }
+}
+
+.keyword {
+    color: white;
+    font-weight:bold;
 }

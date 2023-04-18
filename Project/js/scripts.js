@@ -20,9 +20,11 @@ const luck = document.querySelector('#luck');
 const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image');
 const imgEnvironnement = document.querySelector('#imgEnvironnement');
-let proceedTouUrban = false;
+let proceedToUrban = false;
+let choice;
 let afterChooseClass = false;
 let afterChoice1 = false;
+let afterChoice2 = false;
 
 
 let loc;
@@ -56,18 +58,21 @@ const urbanDestinationsAr = ['Medieval town', 'Steampunk city', 'Elven Land' ,'D
 const urbanDestinations = {
     medievalTown: {
         name: 'medieval town',
-        description: '<br> After a tough journey, you arrive in a medieval town, with cobblestone streets and old buildings. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.'},
+        description: '<br> After a tough journey, you arrive in a medieval town, with cobblestone streets and old buildings. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.',
+        img: 'img/medievalTown.webp'},
     steampunkCity: {
         name: 'steampunk city',
-        description: '<br> After a tough journey, you arrive in a steampunk city, with old buildings and lots ofsteam engines. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.'},
+        description: '<br> After a tough journey, you arrive in a steampunk city, with old buildings and lots ofsteam engines. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.',
+        img: 'img/steampunkCity.jpeg'},
     elvenLand: {
         name: 'elven land',
-        description: '<br> After a tough journey, you arrive in a elven land. You have heard a lot of stories about them, but never seen them. You look at the scene in awe. All the elves working together harmoniously is an oddly satisfying thing to watch. You order a meal, and after eating some delicious specialities, you decide to continue your journey.'},
+        description: '<br> After a tough journey, you arrive in a elven land. You have heard a lot of stories about them, but never seen them. You look at the scene in awe. All the elves working together harmoniously is an oddly satisfying thing to watch. You order a meal, and after eating some delicious specialities, you decide to continue your journey.',
+        img: 'img/elvenLand.jpeg'},
     dwarvenVillage: {
         name: 'dwarven village',
-        description: '<br> After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.'}
+        description: '<br> After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.',
+        img: 'img/dwarvenVillage.webp'},
 };
-
 
 const crossRoads = {
     name: 'crossroads',
@@ -188,7 +193,7 @@ storyLine();
 function storyLine() {
     // choose player class
     chooseClass();
-    changeLocation(startLocations.forest.image);
+    //changeLocation(startLocations.forest.image);
     if (afterChooseClass == true) {
         phaseOne();
     }
@@ -201,9 +206,13 @@ function calculateLocation(){
 
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
-    if (afterChooseClass == true || afterChoice1 == false) {
+    textField.innerHTML = '';
+    if (afterChooseClass == true && afterChoice1 == false) {
         console.log('keuze 1 bereikt')
         firstChoice();
+        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == false) {
+            secondChoice();
+        }
     }
     if(afterChooseClass == false) {
         assignClass(e);
@@ -259,12 +268,11 @@ function updateStats() {
     luck.innerHTML = 'Luck: ' + player.luck;
 }
 
-function changeLocation(imageLink) {
-
-}
+//function changeLocation(imageLink) {}
 
 function phaseOne() {
     firstChoice();
+   // changeLocation();
 }
 
 function firstChoice() {
@@ -277,14 +285,21 @@ function firstChoice() {
         console.log('player before 1k dam:'+player);
         incomingDamage(1000);
         console.log('player after 1k dam'+player);
-        addText(`I jump down the cliff. I land head first on a rock and die. \n`);
+        addText(`I jump down the cliff. I land head first on a rock and die.`);
         // todo herstart
         return;
     }
     if (choice.includes('right')) {
-        addText('I follow the pathway. After a while I arrive at a crossroads. \n');
-        //changeLocation =>
+        addText('I follow the pathway. After a while I arrive at a crossroads.');
+        //changeLocation
+        imgEnvironnement.src = crossRoads.img;
         // secondChoice();
+        addText(`4 options present themselves: <br>
+        > beast: A hungry beast. Maybe I can sneak past it. <br>
+        > river: A poisonous river. I can see a sloop, though it does not look very sturdy. <br>
+        > cliff: A steep cliff. There is a bridge, but it looks like it might break if I try to cross it. <br>
+        > desert: A seemingly endless desert. I don\'t see any enemies, but I probably don\'t have any water on me ....<br>`);
+        afterChoice1 = true;
         return;
     }
 }
@@ -306,34 +321,36 @@ function goBack() {
     // locale hub = variabele waarnaar teruggekeerd kan worden
 }
 
-function secondChoice() {
-    addText(`4 options present themselves: <br>
-    > A hungry beast. Maybe I can sneak past it. <br>
-    > A poisonous river. I can see a sloop, though it does not look very sturdy. <br>
-    > A steep cliff. There is a bridge, but it looks like it might break if I try to cross it. <br>
-    > A dessert. I don\'t see any enemies, but I don\'t have any water on me ....<br>`);
+function killPlayer(){
+    player.health = -1;
+    updateStats();
+}
 
+function secondChoice() {
     if(checkcommand(['beast', 'cliff', 'desert', 'river'])){
-        switch (playerInput.value.toLowerCase()) {
-            case 'beast': 
-                addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
-                incomingDamage(1000); // kill the player
-                break;
-            case 'cliff': 
-                addText('I try to cross the bridge. It breaks as soon as I set foot on land, but luckily I remain unharmed. <br>');
-                player.health -= player.health/8; // removes 1/8 of the player HP
-                proceedTouUrban = true;
-                break;
-            case 'desert': 
-                addText('I try to cross the desert. I run out of water a lot earlier than expected. I surive by the skin of my teeth. <br>');
-                player.health -= player.health/4; // removes 1/4 of the player HP
-                proceedTouUrban = true;
-                break;
-            case 'river': 
-                addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... <br>');
-                player.health -= player.health/2; // removes 1/2 of the player HP
-                proceedTouUrban = true;
-                break;
+        choice = playerInput.value.toLowerCase();
+        if (choice.includes('beast')) {
+            addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
+            killPlayer(); // kill the player
+            return;
+        }
+        if (choice.includes('river')) {
+            addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... <br>');
+            player.health -= player.health/2; // removes 1/2 of the player HP
+            proceedToUrban = true;
+            return;
+        }
+        if (choice.includes('cliff')) {
+            addText('I try to cross the bridge. It breaks as soon as I set foot on land, but luckily I remain unharmed. <br>');
+            player.health -= player.health/8; // removes 1/8 of the player HP
+            proceedToUrban = true;
+            return;
+        }
+        if (choice.includes('desert')) {
+            addText('I try to cross the desert. I run out of water a lot earlier than expected. I surive by the skin of my teeth. <br>');
+            player.health -= player.health/4; // removes 1/4 of the player HP
+            proceedToUrban = true;
+            return;
         }
     }
 };
