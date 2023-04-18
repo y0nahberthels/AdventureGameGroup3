@@ -189,7 +189,7 @@ function addText(text) {
     textField.innerHTML += `${text} <br>`;
 }
 
-storyLine();
+
 function storyLine() {
     // choose player class
     chooseClass();
@@ -204,15 +204,16 @@ function calculateLocation(){
     return loc;
 }
 
+chooseClass();
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
     textField.innerHTML = '';
+    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == false) {
+        secondChoice();
+    }
     if (afterChooseClass == true && afterChoice1 == false) {
         console.log('keuze 1 bereikt')
         firstChoice();
-        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == false) {
-            secondChoice();
-        }
     }
     if(afterChooseClass == false) {
         assignClass(e);
@@ -329,6 +330,7 @@ function killPlayer(){
 function secondChoice() {
     if(checkcommand(['beast', 'cliff', 'desert', 'river'])){
         choice = playerInput.value.toLowerCase();
+        console.log(choice);
         if (choice.includes('beast')) {
             addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
             killPlayer(); // kill the player
@@ -352,6 +354,7 @@ function secondChoice() {
             proceedToUrban = true;
             return;
         }
+        afterChoice2 = true;
     }
 };
 
