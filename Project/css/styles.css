@@ -16,10 +16,10 @@ body {
 /* Text */
 
 p.txt__bottom {
-    display: flex;
+    /* display: flex; */
     /* position: absolute;
     bottom: 0; */
-    max-height: 40vh;
+    max-height: 30vh;
     background-color: rgba(27, 26, 26, 0.403); 
     padding: 10px 5px 10px 5px;
     overflow: auto;
@@ -44,6 +44,10 @@ strong {
     border: 3px solid;
 }
 
+#imgEnvironnement {
+    display: none;
+}
+
 div.div__content {
     display: flex;
     flex-direction: column;
@@ -54,11 +58,16 @@ div.div__content {
     display: none;
 }
 
-#currentLocation, .navlist__item {
+#currentLocation, .navlist__item, #playTime {
     border: 3px solid green;
     font-size: 1.5em;
     font-weight: bold;
     padding: 3px 10px 3px 10px;
+}
+
+#currentLocation, #playTime {
+    margin-right: 10px;
+    width: 90%;
 }
 
 #playerInput {
@@ -123,6 +132,18 @@ div.character {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+.weapon, .shield {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weapon_image, .shield_image {
+    margin-right: 5px;
+    width: 15px;
+    height: 15px;
 }
 
 .character__wrapper {
@@ -252,23 +273,18 @@ body {
 
 .keyword {
     color: white;
-    font-weight:bold;
 }
 
 
 /* Health bar */
 #healthBar {
-    width: 200px;
     height: 20px;
-    background-color: rgb(111, 111, 111);
+    background-color:black;
     margin-bottom: 10px;
     display: flex;
-    justify-content: center;
-    align-content: center ;
     text-align: center;
     font-size: 30px;
     font-weight: bold;
-    display: none;
 }
   
 #healthBar .health {
@@ -283,8 +299,14 @@ body {
     font-size: initial;
 }
 
+/*responsive CSS by hiding imgenvironnement on smaller screens (e.g. mobile phone)*/
 
-.weapon_image, .shield_image {
-    width: 15px;
-    height: 15px;
+@media (min-width: 900px) {
+    #imgEnvironnement {
+        display: inline-block;
+    }
+}
+
+.bold {
+    font-size: bold;
 }

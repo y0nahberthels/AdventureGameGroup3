@@ -1,96 +1,37 @@
-const intTest = Math.round(Math.random() * (playerClasses.warrior.shield.length - 1))
-console.log(intTest);
-testshow.innerHTML = playerClasses.warrior.shield[intTest];
+// calculate score based on time
+// source: code provided by Reda from 2TI via Discord
+let timeLimit = 900; // 15 minutes
+let timeRemaining = timeLimit;
+let score = 1000;
+// function to update the timer display
+function updateTimer(){
+    let minutes = Math.floor(timeRemaining / 60);
+    let seconds = timeRemaining % 60;
+    timer.textContent = `Time Remaining: 
+    <br>${minutes}m ${seconds}s`;
+}
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/styles.css">
-    <title>Project Adventure Game</title>
-</head>
-
-<body>
-    <main>
-        <p id="testshow"></p>
-        <div class="div__content">
-            <div class="content__left">
-                <!-- <div class="div__img">
-                    <img class="img__place" src="img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg" alt="environment">
-                </div> -->
-
-            </div>
-            <div class="content__right"></div>
-            <div class="location">
-                <p id="currentLocation"></p>
-            </div>
-            <div class="character">
-                <img class="character_image" src="#" alt="character sprite">
-                <div class="stats">
-                    <p id="health"></p>
-                    <p id="attack_points"></p>
-                    <p id="defense_points"></p>
-                </div>
-            </div>
-            <div class="inventory">
-                <p>Inventory</p>
-                <div id="inventoryContent">
-                </div>
-            </div>
-
-            <div class="div__img">
-                <img class="img__place" src="img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg" alt="environment">
-            </div>
-
-            <div class="div__txt">
-                <p class="txt__bottom" id="txt__bottom"></p>
-            </div>
-            <input type="text" id="playerInput">
-        </div>
-    </main>
-    <footer>
-
-    </footer>
-    <script src="js/scripts.js"></script>
-</body>
-
-</html>
-
-    btnSubmit.addEventListener('click', function(e) {
-        e.preventDefault();
-        let playerChoice = playerInput.value.toLowerCase();
-        player = playerClasses[playerChoice]; 
-        console.log('playerlog1:' + player);
-        console.log('playerlog2:' + player);
-        addText('> ' + playerChoice); 
-        playerInput.value = '';
-        updateStats();
-        displayLocation(calculateLocation());
-        characterImage.src = player.sprite;
-        afterChooseClass = true;
-    })
-
-    choice = playerInput.value.toLowerCase();
-        switch (choice) {
-            case 'beast': 
-                addText('I try to sneak past the beast. It sees me and attacks me. I die. <br>');
-                killPlayer(); // kill the player
-                break;
-            case 'cliff': 
-                addText('I try to cross the bridge. It breaks as soon as I set foot on land, but luckily I remain unharmed. <br>');
-                player.health -= player.health/8; // removes 1/8 of the player HP
-                proceedTouUrban = true;
-                break;
-            case 'desert': 
-                addText('I try to cross the desert. I run out of water a lot earlier than expected. I surive by the skin of my teeth. <br>');
-                player.health -= player.health/4; // removes 1/4 of the player HP
-                proceedTouUrban = true;
-                break;
-            case 'river': 
-                addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... <br>');
-                player.health -= player.health/2; // removes 1/2 of the player HP
-                proceedTouUrban = true;
-                break;
+// Function to decrease time remaining and update score
+function decreaseTime() {
+    timeRemaining--;
+  
+    // Update the score based on the time remaining
+    if (timeRemaining > 0) {
+      score -= Math.floor(10000 / timeLimit); // Decrease score as time passes
+    } else {
+      score += 10; // Award a fixed score of 10 when time is up
+    }
+  
+    updateTimer();
+  
+    // Check if time is up
+    if (timeRemaining === 0) {
+      clearInterval(timerInterval); // Stop the timer
+  
+      //send score to api
+      //location.replace('deathscherm.html');
+    }
+  }
+  
+// Start the timer
+let timerInterval = setInterval(decreaseTime, 1000); // Decrease time every second
