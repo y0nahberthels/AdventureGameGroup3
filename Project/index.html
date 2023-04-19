@@ -7,54 +7,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/styles.css">
     <title>Text Based Adventure Game</title>
+
 <body>
-<div class="wrapper">
-    <body>
-        <main>
-            <div class="div__content">
-                <div class="content__top">
-                    <div class="content__left">
-                        <div class="location">
-                            <p id="currentLocation">A Lost Guy</p>
-                        </div>
-                        <div class="div__img">
-                            <img class="img__place" id="imgEnvironnement" src="img/Start.jpg" alt="environment">
-                        </div>
-                    </div>
-                    <div class="content__right">
-                        <div class="character__wrapper">
-                            <div class="character">
-                                <img class="character_image" src="img/character placeholder.png" id="character_image" alt="character sprite">
-                                <div class="stats">
-                                    <p id="health"></p>
-                                    <p id="attack_points"></p>
-                                    <p id="defense_points"></p>
-                                    <p id="luck"></p>
-                                </div>
+    <div class="wrapper">
+
+        <body>
+            <main>
+                <div id="healthBar" class="hidden">Bosshealth</div>
+                <div class="div__content">
+                    <div class="content__top">
+                        <div class="content__left">
+                            <div class="location">
+                                <p id="currentLocation">A Lost Guy</p>
                             </div>
-                            <div class="basic__inventory "></div>
-                            <div class="inventory">
+                            <div class="div__img">
+                                <img class="img__place" id="imgEnvironnement" src="img/Start.jpg" alt="environment">
+                            </div>
+                        </div>
+                        <div class="content__right hidden">
+                            <div class="character__wrapper">
+                                <div class="character">
+                                    <img class="character_image" src="img/character placeholder.png"
+                                        id="character_image" alt="character sprite">
+                                    <div class="stats">
+                                        <p id="health"></p>
+                                        <p id="attack_points"></p>
+                                        <p id="defense_points"></p>
+                                        <p id="luck"></p>
+                                    </div>
+                                </div>
+                                <div class="armory_inventory"></div>
+                            </div>
+                            <div class="generic_inventory">
                                 <p>Inventory</p>
                                 <div id="inventoryContent"></div>
                             </div>
                         </div>
-                        <div>
-
-                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="content__bottom">
-                <div class="div__txt">
-                    <p class="txt__bottom" id="txt__bottom"></p>
+                <div class="content__bottom">
+                    <div class="div__txt">
+                        <p class="txt__bottom" id="txt__bottom"></p>
+                    </div>
+                    <form>
+                        <input type="text" id="playerInput">
+                        <button id="btnSubmit">Submit</button>
+                    </form>
                 </div>
-                <form>
-                    <input type="text" id="playerInput">
-                    <button id="btnSubmit">Sumbit</button>
-                </form>
-            </div>
-
-        </div>
+    </div>
     </main>
     <footer>
 

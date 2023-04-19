@@ -1,13 +1,8 @@
 'use strict';
 
 // define arrays with needed variables
-const homeLocations = [''];
-const npcUrban = [];
-const npcMine = [];
-const savedProperties = [];
+const bossPrepositions = ['The Ancient', 'The Ominous', 'The Terrible', 'The Almighty', 'The Evil', 'The Dark', 'The Mighty', 'The Great', 'The Powerful', 'The Unstoppable', 'The Unbeatable', 'The Unkillable'];
 const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
-const exchangeItem = ['diamond', 'unobtanium', 'moon dust', 'titanium', 'gold', 'plutonium', 'antimatter', 'speed of light', 'Californium', 'Tritium'];
-const snack = ['kit kat', 'Bifi', 'chips', 'm&m', 'carrots', 'bell pepper', 'peanuts', 'cucumber', 'cheetohs', 'snickers'];
 const textField = document.querySelector('#txt__bottom');
 const playerInput = document.querySelector('#playerInput');
 
@@ -20,7 +15,9 @@ const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image');
 const imgEnvironnement = document.querySelector('#imgEnvironnement');
 const playerInventory = document.querySelector('#inventoryContent');
-const SnS = document.querySelector('.character');
+const SnS = document.querySelector('.armory_inventory');
+const UI = document.querySelector('.content__right');
+const healthBar = document.querySelector('#healthBar');
 
 let proceedToUrban = false;
 let choice;
@@ -41,34 +38,55 @@ let afterchallenge2Part2 = false;
 let challenge3TryCounter = 5;
 let afterchallenge3 = false;
 let challenge3Solved = false;
+let afterWitchEncounter = false;
+let afterBoss = false;
+let critSuccess = false;
+let bossMissed = false;
+let incDamage;
+let afterBossPart1 = false;
+let afterBossPart2 = false;
+let playerTurnEnded = false;
+let bossTurnEnded = true;
+let damage;
 
-
+// boss variables
+let boss;
+const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
 
 let loc;
+const beastsAr = ['wolf', 'troll', 'dragon', 'crocodile'];
 const beasts = {
     wolf: {
         name: 'wolf',
         description: 'A giant wolf, with sharp teeth and claws. It looks hungry.',
         danger: '30',
         health: '100',
+        img: 'img/wolf.jpeg',
+        environment: 'forest',
     },
     troll: {
         name: 'troll',
         description: 'A menacing troll with a giant club, stained with blood. Will I be its next victim?',
         danger: '40',
         health: '110',
+        img: 'img/troll.webp',
+        environment: 'cave',
     },
     dragon: {
         name: 'dragon',
         description: 'A huge red dragon, with a fiery breath. It\'s surrounded by bones of its victims.',
         danger: '60',
         health: '120',
+        img: 'img/dragon.jpeg',
+        environment: 'abanoned castle',
     },
     crocodile: {
         name: 'crocodile',
         description: 'A huge crocodile, so big I can barely believe my eyes. It can, without a doubt, swallow me whole.',
         danger: '20',
         health: '90',
+        img: 'img/crocodile.jpg',
+        environment: 'swamp',
     }
 };
 const urbanDestinationsAr = ['medievalTown', 'steampunkCity', 'elvenLand' ,'dwarvenVillage'];
@@ -130,9 +148,9 @@ const playerClasses = {
         name: 'warrior',
         description: 'a strong veteran that has won many battles',
         // 140 skillpoints to divide among stats
-        strength: '80',
-        luck: '30',
-        vitality:'30',
+        strength: 80,
+        luck: 30,
+        vitality: 30,
         health: 100,
         sprite: 'img/Warrior.png',
         weapon: 'great sword',
@@ -143,9 +161,9 @@ const playerClasses = {
         name: 'paladin',
         description:'a wise hermit with great magical knowledge',
         // 140 skillpoints to divide among stats
-        strength: '30',
-        luck: '30',
-        vitality: '80',
+        strength: 30,
+        luck: 30,
+        vitality: 80,
         health: 150,
         sprite: 'img/Paladin.png',
         weapon: 'crystal staff',
@@ -156,9 +174,9 @@ const playerClasses = {
         name: 'irishman',
         description: 'a lucky irishman blessed by Saint Patrick',
         // 140 skillpoints to divide among stats
-        strength: '30',
-        luck: '80',
-        vitality:'30',
+        strength: 30,
+        luck: 80,
+        vitality:30,
         health: 100,
         sprite: 'img/Irishman.png',
         weapon: 'mace',
@@ -169,14 +187,28 @@ const playerClasses = {
         name: 'adventurer',
         description: 'a daring, well rounded adventurer',
         // 140 skillpoints to divide among stats
-        strength: '46',
-        luck: '47',
-        vitality:'47',
+        strength: 46,
+        luck: 47,
+        vitality: 47,
         health: 120,
         sprite: 'img/Adventurer.png',
         weapon: 'spear',
         shield: 'adventurers shield',
         items: [],
+    }
+};
+
+const endingsAr = ['good', 'bad'];
+const endings = {
+    good: {
+        name: 'good',
+        description: '<br>You choose to not take any chances, and with your remaining enery you drag yourself through the portal. You fall asleep almost immediatly, despite your sever wounds. In the morning you feel something on your face and shoot up immediatly. "Is it not over yet?" you think to yourself, but then you see your cat, looking at you very judgemental. Happy it\'s over, you pet your cat and go make yourself a coffee.',
+    },
+    bad: {
+        name: 'bad',
+        description: `<br>You let yourself go. Was it curiousity or greed? You\'ll never know... As soon as you openen up the chest, the old woman appeared. 
+        <br>>>"Greedy bastard. How are you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as the next boss, until the next traveler frees you."
+        <br>Before even could react, you feel your body is starting to change. The pain is excruciating. Bones are being broken and rearranged to fit your new bodily composition. You don\'t want to accept this, but there is nothing you can do... You are now the next boss.`,
     }
 };
 
@@ -196,20 +228,31 @@ function randomChance() {
 
 function outgoingDamage() {
     //critical hit calculator
-    const critSucces = false;
+    critSuccess = false;
     if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100 ) {
-        critSucces = true;
+        critSuccess = true;
     }
     //damage calculator
-    if (critSucces == false) {let damage = Math.round(Math.random * player.strength)}
-    if (critSucces == true) {(Math.round(Math.random * player.strength)) * 2}
+    if (critSuccess == false) {
+        let damage = Math.round(Math.random * player.strength);
+    }
+    if (critSuccess == true) {
+        let damage = (Math.round(Math.random * player.strength)) * 2;
+    }
+    return damage;
 }
 
 // danger is de max damage dat je kan krijgen, damage = 0 tot danger (niet tot en met)
 function incomingDamage(danger) {
+    bossMissed = false;
+    if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100 ) {
+        bossMissed = true;
+        return;
+    }
     let damage = Math.round(Math.random() * danger);
-    player.health -= damage;
+    player.health -= incDamage;
     updateStats();
+    return incDamage;
 }
 
 function addText(text) {
@@ -232,16 +275,28 @@ function calculateLocation(){
 }
 
 chooseClass();
+//location.replace('eindscherm.html')
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
+    scrollToBottom();
+    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == true && afterWitchEncounter == true && afterBossPart1 == true && afterBossPart2 == false) {
+        if (playerTurnEnded == false && bossTurnEnded == true && playerInput.value.toLowerCase() == 'attack') {
+            playerTurn();
+        }
+    }
     if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == false) {
         thirdChallengePart1();
-        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == true) {
+        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == false) {
             thirdChallengePart2();
+            if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == true && afterWitchEncounter == false) {
+                witchEncounter();
+                if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == true && afterWitchEncounter == true && afterBossPart1 == false) {
+                    bossEncounter();
+                }
+            }
         }
-
     }
-    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && afterchallenge2 == false) {
+    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == false) {
         secondChallengePart1();
         if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == false) {
             secondChallengePart2();
@@ -293,6 +348,7 @@ function assignClass(e) {
     characterImage.src = player.sprite;
     afterChooseClass = true;
     addText('<br>I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
+    UI.classList.remove('hidden');
 }
 
 function chooseClass() {
@@ -350,9 +406,7 @@ function firstChoice() {
     let choice = playerInput.value.toLowerCase();
     console.log('choice:'+choice);
     if (choice.includes('left')) {
-        console.log('player before 1k dam:'+player);
-        incomingDamage(1000);
-        console.log('player after 1k dam'+player);
+        killPlayer();
         addText(`I jump down the cliff. I land head first on a rock and die.`);
         // todo herstart
         return;
@@ -385,9 +439,6 @@ function checkcommand(args) {
     });
 }
 
-// function goBack() {} // lokal hub waarnaar je terug kan gaan
-
-
 function killPlayer(){
     player.health = -1;
     updateStats();
@@ -402,21 +453,21 @@ function secondChoice() {
             killPlayer(); // kill the player
         }
         else if (choice.includes('river')) {
-            addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... You took some damage');
+            addText('<br>I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... You took some damage');
             player.health -= player.health/2; // removes 1/2 of the player HP
             updateStats();
             proceedToUrban = true;
 
         } 
         else if (choice.includes('cliff')) {
-            addText('I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. You took some damage.');
+            addText('<br>I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. You took some damage.');
             player.health -= player.health/8; // removes 1/8 of the player HP
             updateStats();
             proceedToUrban = true;
 
         }
         else if (choice.includes('desert')) {
-            addText('I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. You took some damage');
+            addText('<br>I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. You took some damage');
             player.health -= player.health/4; // removes 1/4 of the player HP
             updateStats();
             proceedToUrban = true;
@@ -438,14 +489,15 @@ function secondChoice() {
 
 function thirdChoice() {
     addText(`<br>I feel a cold hand on my shoulder: "I have never seen you around here, traveler", an old woman with a mysterious aura says to me. 
-    <br>"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."
+    <br>>>"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."
     <br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
     <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found*`);
 
     // initiate challange 1
     currentLocation.innerHTML = 'Challenge 1: Sudoku';
     imgEnvironnement.src = 'img/sudoku.png';
-    addText(`<br> the next Mysterious helper you meet says: "sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
+    addText(`<br> the next Mysterious helper you meet says: 
+    <br>>>"Sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
     <br> Vul de nummers in van links naar rechts, en van boven naar benede. 
     <br> +-----------------------------------+
     <br> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
@@ -473,10 +525,12 @@ function firstChallengePart1() {
 }
 
 function firstChallengePart2() {
-    giveReward();
+    addText(`<br>>>"Your reward is: a ${giveReward()}"`);
     afterchallenge1 = true;
-    addText(`<br> Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard.
-    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of c ourse. No accents, no capital letters. Just the number. If you failed, translate 'six'.)`);
+    //initiate challenge 2
+    currentLocation.innerHTML = 'Challenge 2: The Spanish Test';
+    addText(`<br> After completing the previous challenge, I am aproached by a jovial looking man with an enormous sombrero; so big that it totally covers his face.`);
+    addText(`<br> >>"Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard. Tell me how many tries it took you to complete the previous challenge - in Spanish of course. If you failed to solve it, tell me what "six" is in Spanish. Vamos!"`);
 }
 
 function secondChallengePart1(){
@@ -513,22 +567,25 @@ function secondChallengePart1(){
     }
     if (challenge2TryCounter == 1) {
         challenge2Solved = true;
-        addText('<br>AY CARAMBA! puzzle bypassed by too low intellingence');
+        addText('<br>>>AY CARAMBA! puzzle bypassed by too low intellingence');
         return;
     }
     if (playerInput.value.toLowerCase() != answer){
         challenge2TryCounter--;
-        addText('<br> Equivocado! Please try again.');
-        addText(`you have ${challenge2TryCounter} tries left`)
+        addText('<br>>>Equivocado! Please try again.');
+        addText(`You have ${challenge2TryCounter} tries left`)
         return;
     }
 }
 
 function secondChallengePart2() {
-    addText('<br>Great job! You have solved the puzzle!')
-    giveReward();
+    addText('<br>Great job! You have solved the puzzle!');
+    addText(`<br>>>"You passed my challenge, your reward is a ${giveReward()}"`);
     afterchallenge2Part2 = true;
-    addText(`<br> An odd fellow asks you for help with a German word. Each piece of this jigsaw puzzle is a letter of the word. Can you put the pieces together and tell me the word?`);
+    // intiate challenge 3
+    currentLocation.innerHTML = 'Challenge 3: The German Jigsaw';
+    addText(`<br>You are aproached by an odd looking fellow wearing lederhosen. He reeks of beer and sauerkraut. He says:
+    <br>>>"Gutentag mein Freund. I need your help. I am very hungover and can\'t concentrate. I absolutely need to solve this puzzle. Can you do it for me? I will reward you handsomely. Combine all the letters into a word, and tell me what it is.`);
     imgEnvironnement.src = 'img/jigsaw.png';
 }
 
@@ -541,7 +598,7 @@ function giveReward(){
 }
 
 function thirdChallengePart1(){
-    answer = 'sagen!';
+    let answer = 'sagen!';
     choice = playerInput.value.toLowerCase();
     if (choice == answer) {
         challenge3Solved = true;
@@ -549,31 +606,114 @@ function thirdChallengePart1(){
     }
     if (challenge3TryCounter == 1) {
         challenge3Solved = true;
-        addText('<br>Das war nicht gut ... Here is your reward anyway');
+        addText('<br>>>Das war nicht gut ... Here is your reward anyway. The word was "sagen!"');
         return;
     }
     if (choice != answer){
         challenge3TryCounter--;
-        addText('<br> Falsch! Please try again.');
+        addText('<br>>>Falsch! Please try again.');
         addText(`you have ${challenge3TryCounter} tries left`)
         return;
     }
 }
 
 function thirdChallengePart2() {
-    addText(`<br> You passed the test, your reward is ${giveReward()}`)
+    addText(`<br>You passed the test, your reward is ${giveReward()}`)
     afterchallenge3 = true;
-}
-
-function witchEncounter(){
+    currentLocation.innerHTML = 'The old woman\'s hut';
+    imgEnvironnement.src = 'img/hut.webp';
     addText(`<br>I head back to the old woman\'s hut. I knock on the door, but no one answers. I knock a second time. No answer. Luckily the door is not very sturdy. I take my ${player.shield} and bash the door in. As soon as I do that, she magically appears in front of me, surrounded by a dark aura.
     <br>"Congratulations traveler. I did\'t think you would make it this far. Let me help you on your quest." <br>She starts speaking an ancient language, and I start to feel a little dizzy. My conciousness starts to fade, but before that happens I come back to my senses. I have never felt this good. 
     <br>"I cast a spell on you. You will now be able to defeat your final foe, and go home. Good luck!"
     <br>She disappears in a puff of smoke.`);
+}
+
+function witchEncounter(){
     // apply buffs to player
-    player.hp += 30;
-    player.attack += 10;
+    player.health += 30;
+    player.strength += 10;
     player.defense += 10;
     player.items = [];
     updateStats();
+    selectBoss();
+    console.log('boss' + {boss});
+    addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
+    ${randomBossPreposition} ${boss.name}appears before me.`);
+    currentLocation.innerHTML = `${boss.environment}`;
+    imgEnvironnement.src = boss.img;
+    healthBar.classList.remove('hidden');
+    healthBar.innerHTML += ' ' + boss.health;
+    afterWitchEncounter = true;
+
+    updateBossHealth();
+}
+
+function selectBoss(){
+    boss = beasts[beastsAr[Math.floor(Math.random() * beastsAr.length)]];
+}
+
+function bossEncounter() {
+    addText(`<br>Adrenaline rushes through my veins. I am ready to fight. I take out my ${player.weapon} and ${player.shield} and prepare for battle.`);
+    afterBossPart1 = true;
+}
+
+function endGame() {
+    location.replace('eindscherm.html');
+}
+
+
+function playerTurn() {
+    if (player.health == 0 || player.health < 0) {
+        addText('<br>i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me');
+        addText(`The last thing i see before i pass out is my enemy, smiling at me.`);
+        return;
+    }
+    addText(`<br> I swing my sword at the enemy...`);
+    const damage = outgoingDamage();
+    if (critSuccess == true) {
+        addText(`<br>CRITICAL HIT!!! I hit the boss for ${damage} damage`);
+    }
+    if (critSuccess == false) {
+        addText(`<br>HIT! I attack the boss for ${damage} damage`);
+    }
+    boss.health -= damage;
+    updateBossHealth();
+}
+
+function bossTurn() {
+    if (boss.health == 0 || boss.health < 0) {
+        addText(`<br> The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is dead!`);
+        return;}
+    addText(`<br> The ${randomBossPreposition} ${boss.name} attacks you...`);
+    if (bossMissed == true) {
+        addText(`<br>!!!The ${randomBossPreposition} ${boss.name} MISSED!!!`);
+    }
+    if (bossMissed == false) {
+        addText(`<br>The boss hits you for ${incDamage} damage`);
+    }
+}
+
+//scrollToBottom gebruikt van https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
+function scrollToBottom(timedelay = 0) {
+    var scrollId;
+    var height = 0;
+    var minScrollHeight = 100;
+    scrollId = setInterval(function () {
+        if (height <= document.body.scrollHeight) {
+            window.scrollBy(0, minScrollHeight);
+            textField.scrollBy(0, minScrollHeight);
+        }
+        else {
+            clearInterval(scrollId);
+        }
+        height += minScrollHeight;
+    }, timedelay);
+}
+
+function updateBossHealth(){
+    //healthBar.innerHTML = boss.health;
+    
+    const healthPercentage = boss.health + '%';
+    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"></div>` + randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
+    healthBar.style.display = 'block';
 }

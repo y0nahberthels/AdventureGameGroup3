@@ -20,7 +20,7 @@ p.txt__bottom {
     /* position: absolute;
     bottom: 0; */
     max-height: 40vh;
-    background-color: rgba(128, 128, 128, 0.403);
+    background-color: rgba(27, 26, 26, 0.403); 
     padding: 10px 5px 10px 5px;
     overflow: auto;
     scroll-behavior: initial;
@@ -50,7 +50,7 @@ div.div__content {
     align-items: center;
 }
 
-.hidden {
+.content__right.hidden, .hidden {
     display: none;
 }
 
@@ -79,10 +79,7 @@ div.div__content {
     display: none;
 }
 
-.character__wrapper {
-    display: flex;
-    flex-wrap: wrap;
-}
+
 
 img.character_image {
     border: 2px solid;
@@ -113,21 +110,44 @@ div.character {
     display: flex;
 }
 
+
+
 .content__right {
     margin-left: 20px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     border: solid 1px;
 }
 
-.inventory {
-    width: 100%;
-    margin: 10px;
+.armory_inventory {
+    display: flex;
+    justify-content: center;
 }
 
-.inventory p {
+.character__wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.generic_inventory {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.generic_inventory p {
+    justify-content: center;
     text-align: center;
+    padding-bottom: 5px;
     border-bottom: solid 2px green;
+    border-top: solid 2px green;
+    width: 100%;
+}
+
+#inventoryContent {
+    display: flex;
+    justify-content: center;
 }
 
 .content__left {
@@ -232,4 +252,26 @@ body {
 .keyword {
     color: white;
     font-weight:bold;
+}
+
+
+/* Health bar */
+#healthBar {
+    width: 200px;
+    height: 20px;
+    background-color: rgb(111, 111, 111);
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-content: center ;
+    text-align: center;
+    font-size: 30px;
+    font-weight: bold;
+    padding-bottom: 3px;
+    display: none;
+}
+  
+#healthBar .health {
+    height: 100%;
+    background-color: rgb(255, 8, 8);
 }
