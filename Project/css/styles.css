@@ -121,6 +121,7 @@ div.character {
 
 .armory_inventory {
     display: flex;
+    flex-direction: column;
     justify-content: center;
 }
 
@@ -267,11 +268,23 @@ body {
     text-align: center;
     font-size: 30px;
     font-weight: bold;
-    padding-bottom: 3px;
     display: none;
 }
   
 #healthBar .health {
     height: 100%;
     background-color: rgb(255, 8, 8);
+    align-content: center;
+    display:grid;
+}
+
+#par__healthbar {
+    color: rgb(0, 0, 0);
+    font-size: initial;
+}
+
+
+.weapon_image, .shield_image {
+    width: 15px;
+    height: 15px;
 }

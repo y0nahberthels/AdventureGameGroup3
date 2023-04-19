@@ -1,10 +1,13 @@
 'use strict';
 
+
 // define arrays with needed variables
 const bossPrepositions = ['The Ancient', 'The Ominous', 'The Terrible', 'The Almighty', 'The Evil', 'The Dark', 'The Mighty', 'The Great', 'The Powerful', 'The Unstoppable', 'The Unbeatable', 'The Unkillable'];
 const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
 const textField = document.querySelector('#txt__bottom');
 const playerInput = document.querySelector('#playerInput');
+
+const parhealthbar = document.querySelector('#par__healthbar');
 
 const currentLocation = document.querySelector('#currentLocation');
 const healthpool = document.querySelector('#health');
@@ -18,6 +21,9 @@ const playerInventory = document.querySelector('#inventoryContent');
 const SnS = document.querySelector('.armory_inventory');
 const UI = document.querySelector('.content__right');
 const healthBar = document.querySelector('#healthBar');
+
+const nameInput = document.getElementById('nameInput'); // player input moet ID zijn
+const pswInput = document.getElementById('pswInput'); // player input moet ID zijn
 
 let proceedToUrban = false;
 let choice;
@@ -43,6 +49,7 @@ let afterBoss = false;
 let critSuccess = false;
 let bossMissed = false;
 let incDamage;
+let outDamage;
 let afterBossPart1 = false;
 let afterBossPart2 = false;
 let playerTurnEnded = false;
@@ -59,23 +66,23 @@ const beasts = {
     wolf: {
         name: 'wolf',
         description: 'A giant wolf, with sharp teeth and claws. It looks hungry.',
-        danger: '30',
-        health: '100',
+        danger: 30,
+        health: 100,
         img: 'img/wolf.jpeg',
         environment: 'forest',
     },
     troll: {
         name: 'troll',
         description: 'A menacing troll with a giant club, stained with blood. Will I be its next victim?',
-        danger: '40',
-        health: '110',
+        danger: 40,
+        health: 110,
         img: 'img/troll.webp',
         environment: 'cave',
     },
     dragon: {
         name: 'dragon',
         description: 'A huge red dragon, with a fiery breath. It\'s surrounded by bones of its victims.',
-        danger: '60',
+        danger: 60,
         health: '120',
         img: 'img/dragon.jpeg',
         environment: 'abanoned castle',
@@ -83,8 +90,8 @@ const beasts = {
     crocodile: {
         name: 'crocodile',
         description: 'A huge crocodile, so big I can barely believe my eyes. It can, without a doubt, swallow me whole.',
-        danger: '20',
-        health: '90',
+        danger: 20,
+        health: 90,
         img: 'img/crocodile.jpg',
         environment: 'swamp',
     }
@@ -155,6 +162,8 @@ const playerClasses = {
         sprite: 'img/Warrior.png',
         weapon: 'great sword',
         shield: 'great shield',
+        weaponImage: 'img/weapon.png',
+        shieldImage: 'img/shield.png',
         items: [],
     },
     paladin: {
@@ -168,6 +177,8 @@ const playerClasses = {
         sprite: 'img/Paladin.png',
         weapon: 'crystal staff',
         shield: 'mystic shield',
+        weaponImage: 'img/weapon.png',
+        shieldImage: 'img/shield.png',
         items: [],
     },
     irishman: {
@@ -181,6 +192,8 @@ const playerClasses = {
         sprite: 'img/Irishman.png',
         weapon: 'mace',
         shield: 'lucky clover shield',
+        weaponImage: 'img/weapon.png',
+        shieldImage: 'img/shield.png',
         items: [],
     },
     adventurer: {
@@ -194,6 +207,8 @@ const playerClasses = {
         sprite: 'img/Adventurer.png',
         weapon: 'spear',
         shield: 'adventurers shield',
+        weaponImage: 'img/weapon.png',
+        shieldImage: 'img/shield.png',
         items: [],
     }
 };
@@ -234,12 +249,13 @@ function outgoingDamage() {
     }
     //damage calculator
     if (critSuccess == false) {
-        let damage = Math.round(Math.random * player.strength);
+        outDamage = Math.round(Math.random() * player.strength);
     }
     if (critSuccess == true) {
-        let damage = (Math.round(Math.random * player.strength)) * 2;
+        outDamage = (Math.round(Math.random() * player.strength)) * 2;
     }
-    return damage;
+    console.log('outgoing damage source:' + outDamage)
+    return outDamage;
 }
 
 // danger is de max damage dat je kan krijgen, damage = 0 tot danger (niet tot en met)
@@ -249,9 +265,10 @@ function incomingDamage(danger) {
         bossMissed = true;
         return;
     }
-    let damage = Math.round(Math.random() * danger);
+    incDamage = Math.round(Math.random() * danger);
     player.health -= incDamage;
     updateStats();
+    console.log('incoming damage source:' + incDamage)
     return incDamage;
 }
 
@@ -279,8 +296,14 @@ chooseClass();
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
     scrollToBottom();
+    if (playerTurnEnded == true && bossTurnEnded == false) {
+        console.log('DERDE LAYER');
+        bossTurn();
+    }
     if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == true && afterWitchEncounter == true && afterBossPart1 == true && afterBossPart2 == false) {
+        console.log('EERSTE LAYER');
         if (playerTurnEnded == false && bossTurnEnded == true && playerInput.value.toLowerCase() == 'attack') {
+            console.log('TWEEDE LAYER');
             playerTurn();
         }
     }
@@ -328,10 +351,6 @@ btnSubmit.addEventListener('click', function(e) {
         killPlayer();
     }
     playerInput.value = '';
-    console.log('afterchooseClass:'+afterChooseClass);
-    console.log('afterChoice1:'+ afterChoice1);
-    console.log('afterChoice2:' + afterChoice2);
-    console.log('afterChoice3:' + afterChoice3);
 })
 
 function assignClass(e) {
@@ -342,8 +361,8 @@ function assignClass(e) {
     addText('> ' + playerChoice); 
     playerInput.value = '';
     updateStats();
-    SnS.innerHTML += `<br>> ${player.weapon} 
-    <br>> ${player.shield}`;
+    SnS.innerHTML += `<br>> <img class="weapon_image" src="img/weapon.png" alt="weapon icon"> ${player.weapon} 
+    <br>> <img class="shield_image" src="img/shield.png" alt="shield icon"> ${player.shield}`;
     displayLocation(calculateLocation());
     characterImage.src = player.sprite;
     afterChooseClass = true;
@@ -396,11 +415,6 @@ function updateStats() {
         }
     }
 }
-
-function phaseOne() {
-    firstChoice();
-}
-
 
 function firstChoice() {
     let choice = playerInput.value.toLowerCase();
@@ -638,7 +652,7 @@ function witchEncounter(){
     selectBoss();
     console.log('boss' + {boss});
     addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
-    ${randomBossPreposition} ${boss.name}appears before me.`);
+    ${randomBossPreposition} ${boss.name} appears before me.`);
     currentLocation.innerHTML = `${boss.environment}`;
     imgEnvironnement.src = boss.img;
     healthBar.classList.remove('hidden');
@@ -654,6 +668,7 @@ function selectBoss(){
 
 function bossEncounter() {
     addText(`<br>Adrenaline rushes through my veins. I am ready to fight. I take out my ${player.weapon} and ${player.shield} and prepare for battle.`);
+    addText(`<br>? enter "attack" to attack ?`);
     afterBossPart1 = true;
 }
 
@@ -669,18 +684,22 @@ function playerTurn() {
         return;
     }
     addText(`<br> I swing my sword at the enemy...`);
-    const damage = outgoingDamage();
+    const outDamage = outgoingDamage();
+    console.log('outgoing damage implemented:' + outDamage)
     if (critSuccess == true) {
-        addText(`<br>CRITICAL HIT!!! I hit the boss for ${damage} damage`);
+        addText(`<br>CRITICAL HIT!!! I hit the boss for ${outDamage} damage`);
     }
     if (critSuccess == false) {
-        addText(`<br>HIT! I attack the boss for ${damage} damage`);
+        addText(`<br>HIT! I attack the boss for ${outDamage} damage`);
     }
-    boss.health -= damage;
+    boss.health -= outDamage;
     updateBossHealth();
+    playerTurnEnded = true;
+    bossTurnEnded = false;
 }
 
 function bossTurn() {
+    incomingDamage(boss.danger);
     if (boss.health == 0 || boss.health < 0) {
         addText(`<br> The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is dead!`);
         return;}
@@ -691,6 +710,10 @@ function bossTurn() {
     if (bossMissed == false) {
         addText(`<br>The boss hits you for ${incDamage} damage`);
     }
+    console.log('incoming damage implemented:' + incDamage)
+    bossTurnEnded = true;
+    playerTurnEnded = false;
+    addText(`<br>? enter "attack" to attack ?`);
 }
 
 //scrollToBottom gebruikt van https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
@@ -714,6 +737,77 @@ function updateBossHealth(){
     //healthBar.innerHTML = boss.health;
     
     const healthPercentage = boss.health + '%';
-    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"></div>` + randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
-    healthBar.style.display = 'block';
+    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"><p id="par__healthbar">${randomBossPreposition} ${boss.name} ${boss.health}</p></div>` 
+    console.log('loghealth' + parhealthbar)
+    //parhealthbar.innerHTML = randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
+}
+
+// calculate score based on time
+// source: code provided by Reda from 2TI via Discord
+let timeLimit = 900; // 15 minutes
+let timeRemaining = timeLimit;
+let score = 1000;
+// function to update the timer display
+function updateTimer(){
+    let minutes = Math.floor(timeRemaining / 60);
+    let seconds = timeRemaining % 60;
+    // document.getElementById('timer').textContent = `Time Remaining: ${minutes}m ${seconds}s`;
+}
+
+// Function to decrease time remaining and update score
+function decreaseTime() {
+    timeRemaining--;
+  
+    // Update the score based on the time remaining
+    if (timeRemaining > 0) {
+      score -= Math.floor(10000 / timeLimit); // Decrease score as time passes
+    } else {
+      score += 10; // Award a fixed score of 10 when time is up
+    }
+  
+    updateTimer();
+  
+    // Check if time is up
+    if (timeRemaining === 0) {
+      clearInterval(timerInterval); // Stop the timer
+  
+      //send score to api
+      //location.replace('deathscherm.html');
+    }
+  }
+  
+// Start the timer
+let timerInterval = setInterval(decreaseTime, 1000); // Decrease time every second
+
+// Call the initial update functions
+updateTimer();
+
+let playerName;
+let playerPassword;
+/*
+document.getElementById('frm__login').addEventListener('submit', function(e){
+    // prevent default actions
+    e.preventDefault();
+    // get values from form
+    playerName = document.getElementById('input__username').value;
+    playerPassword = document.getElementById('input__password').value;
+
+    location.replace('index.html');
+});
+*/ 
+
+let playerID;
+function sendDataToApi(username, password, score){
+    // get ID from API
+    var requestOptions = {
+        method: 'GET',
+        redirect: 'follow'
+    }
+    fetch(`https://lucas-miserez.be/api/collections/person/records?filter=(email='example@student.odisee.be'|| email='${username}')`, requestOptions)
+        .then(response => response.text())
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+
+        playerID = result.items['colletionId'];
+        console.log(playerID);
 }
