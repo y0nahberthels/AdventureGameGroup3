@@ -184,8 +184,8 @@ const playerClasses = {
         name: 'irishman',
         description: 'a lucky irishman blessed by Saint Patrick',
         // 140 skillpoints to divide among stats
-        strength: 30,
-        luck: 80,
+        strength: 1000,
+        luck: 200,
         vitality:30,
         health: 100,
         sprite: 'img/Irishman.png',
@@ -223,7 +223,7 @@ const endings = {
 };
 
 // Call the initial update functions
-//updateTimer();
+// updateTimer();
 
 function closeWindow(event) {
     event.preventDefault();
@@ -240,26 +240,26 @@ function randomChance() {
 }
 
 function outgoingDamage() {
-    //critical hit calculator
+    // critical hit calculator
     critSuccess = false;
-    if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100 ) {
+    if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100) {
         critSuccess = true;
     }
-    //damage calculator
+    // damage calculator
     if (critSuccess == false) {
         outDamage = Math.round(Math.random() * player.strength);
     }
     if (critSuccess == true) {
         outDamage = (Math.round(Math.random() * player.strength)) * 2;
     }
-    console.log('outgoing damage source:' + outDamage)
+    console.log('outgoing damage source:' + outDamage);
     return outDamage;
 }
 
 // danger is de max damage dat je kan krijgen, damage = 0 tot danger (niet tot en met)
 function incomingDamage(danger) {
     bossMissed = false;
-    if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100 ) {
+    if ((Math.round(((Math.random() * 100) + player.luck)) / 2) >= 100) {
         bossMissed = true;
         return;
     }
@@ -278,7 +278,7 @@ function addText(text) {
 function storyLine() {
     // choose player class
     chooseClass();
-    //changeLocation(startLocations.forest.image);
+    // changeLocation(startLocations.forest.image);
     if (afterChooseClass == true) {
         phaseOne();
     }
@@ -286,18 +286,31 @@ function storyLine() {
 
 // calculate a random location from the startLocations object to start the storyline
 function calculateLocation(){
-    console.log('urbanDestinationsAr'+urbanDestinationsAr)
+    console.log('urbanDestinationsAr'+urbanDestinationsAr);
     loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]];
     return loc;
 }
 
 chooseClass();
-//location.replace('eindscherm.html')
+// location.replace('eindscherm.html')
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
     scrollToBottom();
     if (playerInput.value == 'kill') {
         killPlayer();
+    }
+    if (playerInput.value == 'baguetteboss') {
+        afterChoice1 = true;
+        afterChoice2 = true;
+        afterChoice3 = true;
+        afterchallenge1 = true;
+        challenge1Solved = true;
+        challenge2Solved = true;
+        challenge2Solved = true;
+        afterchallenge2Part2 = true;
+    }
+    if (playerInput.value == 'winners') {
+        location.replace('eindscherm.html');
     }
     if (playerTurnEnded == true && bossTurnEnded == false) {
         console.log('DERDE LAYER');
@@ -414,13 +427,14 @@ function updateStats() {
     defense_points.innerHTML = 'Vitality: ' + player.vitality;
     luck.innerHTML = 'Luck: ' + player.luck;
 
-    //update inventory
+    // update inventory
     if (player.items.length > 0) {
         playerInventory.innerHTML = '';
         for (let i = 0; i < player.items.length; i++) {
             playerInventory.innerHTML += '>' + player.items[i] + '<br>';
         }
     }
+    // if (afterWIc)
 }
 
 function firstChoice() {
@@ -434,7 +448,7 @@ function firstChoice() {
     }
     if (choice.includes('right')) {
         addText('I follow the pathway. After a while I arrive at a crossroads.');
-        //changeLocation
+        // changeLocation
         imgEnvironnement.src = crossRoads.img;
         // secondChoice();
         addText(`4 options present themselves: 
@@ -552,7 +566,7 @@ function firstChallengePart1() {
 function firstChallengePart2() {
     addText(`>>"Your reward is: a ${giveReward()}"`);
     afterchallenge1 = true;
-    //initiate challenge 2
+    // initiate challenge 2
     currentLocation.innerHTML = 'Challenge 2: The Spanish Test';
     addText(`After completing the previous challenge, I am aproached by a jovial looking man with an enormous sombrero; so big that it totally covers his face.`);
     addText(`>>"Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard. Tell me how many tries it took you to complete the previous challenge - in Spanish of course. If you failed to solve it, tell me what "six" is in Spanish. Vamos!"`);
@@ -660,10 +674,8 @@ function witchEncounter(){
     player.health += 30;
     player.strength += 10;
     player.defense += 10;
-    player.items = [];
-    updateStats();
+
     selectBoss();
-    console.log('boss' + {boss});
     addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
     ${randomBossPreposition} ${boss.name} appears before me.`);
     currentLocation.innerHTML = `${boss.environment}`;
@@ -671,6 +683,7 @@ function witchEncounter(){
     healthBar.classList.remove('hidden');
     healthBar.innerHTML += ' ' + boss.health;
     afterWitchEncounter = true;
+    updateStats();
     updateBossHealth();
     healthBar.style.backgroundColor = 'rgb(111, 111, 111)'
 }
@@ -717,6 +730,7 @@ function bossTurn() {
     incomingDamage(boss.danger);
     if (boss.health == 0 || boss.health < 0) {
         addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is dead!`);
+        scoreToAPI();
         return;}
     addText(`The ${randomBossPreposition} ${boss.name} attacks you...`);
     if (bossMissed == true) {
@@ -831,16 +845,39 @@ function decreaseTime() {
   // Check if time is up
   if (timeRemaining === 0) {
     clearInterval(timerInterval); // Stop the timer
-
-	//send score to api
-
-    alert(`Time's up! Your final score is: ${score}`);
+    location.replace('deathscherm.html');
   }
 }
-
 // Start the timer
 let timerInterval = setInterval(decreaseTime, 1000); // Decrease time every second
 
 // Call the initial update functions
 updateTimer();
 updateScore();
+
+function scoreToAPI(){
+    let bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJ6NDFjcnl6cDNyeTJkdngiLCJleHAiOjE2ODIwMDI4NjMsImlkIjoiMzBlanU3b2E2c2ozenI4IiwidHlwZSI6ImF1dGhSZWNvcmQifQ.oGV7khG71nu0D3cNrc3LWrhhkv-alKvOD0BrDjlqDbM"
+
+var myHeaders = new Headers();
+myHeaders.append("Authorization", `Bearer ${bearer}`);
+myHeaders.append("Content-Type", "application/json");
+
+var raw = JSON.stringify({
+  "player": "30eju7oa6sj3zr8",
+  "plaats": 1,
+  "score": `${score}`,
+  "score_is_van_team": "6904sawk54d3ptz"
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("https://lucas-miserez.be/api/collections/score/records", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
+}

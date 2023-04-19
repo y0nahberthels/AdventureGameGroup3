@@ -9,6 +9,8 @@ Todo:
 - CSS autoscroll naar beneden
 - einde(s) toevoegen
 - combell testen
+- geluiden toeveogen
+- eindscherm
 
 Optioneel:
 - gif met idle animatie in plaats van statische tekst
@@ -20,6 +22,14 @@ Optioneel:
 - ending variabele
 - Boss healthbar
 - eindscherm per einde
+
+
+FOUTEN:
+- game over melding
+- boss death fout
+- einde toevoegen
+- healthbar fout
+- town sudoku
 
 Ideen:
 - vijand voor de baas toevoegen voor combat te leren
