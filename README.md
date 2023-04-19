@@ -6,7 +6,7 @@ Todo:
 - <br> niet meer gebruiken
 - text letter per letter laten verschijnen ✘ zal waarschijnlijk niet lukken, te geavanceerd
 - checkCommand herwerken 
-- CSS autoscroll naar beneden
+- CSS autoscroll naar beneden ✓
 - einde(s) toevoegen
 - combell testen
 - geluiden toeveogen
