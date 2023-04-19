@@ -8,7 +8,6 @@ const savedProperties = [];
 const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
 const exchangeItem = ['diamond', 'unobtanium', 'moon dust', 'titanium', 'gold', 'plutonium', 'antimatter', 'speed of light', 'Californium', 'Tritium'];
 const snack = ['kit kat', 'Bifi', 'chips', 'm&m', 'carrots', 'bell pepper', 'peanuts', 'cucumber', 'cheetohs', 'snickers'];
-const testshow = document.querySelector('#testshow');
 const textField = document.querySelector('#txt__bottom');
 const playerInput = document.querySelector('#playerInput');
 
@@ -21,6 +20,7 @@ const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image');
 const imgEnvironnement = document.querySelector('#imgEnvironnement');
 const playerInventory = document.querySelector('#inventoryContent');
+const SnS = document.querySelector('.character');
 
 let proceedToUrban = false;
 let choice;
@@ -36,6 +36,12 @@ let challenge1TryCounter = 5;
 let afterchallenge2 = false;
 let challenge2Solved = false;
 let challenge2TryCounter = 5;
+let afterchallenge2Part1 = false;
+let afterchallenge2Part2 = false;
+let challenge3TryCounter = 5;
+let afterchallenge3 = false;
+let challenge3Solved = false;
+
 
 
 let loc;
@@ -228,13 +234,23 @@ function calculateLocation(){
 chooseClass();
 btnSubmit.addEventListener('click', function(e) {
     e.preventDefault();
+    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == false) {
+        thirdChallengePart1();
+        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == true && challenge3Solved == true && afterchallenge3 == true) {
+            thirdChallengePart2();
+        }
+
+    }
+    if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && afterchallenge2 == false) {
+        secondChallengePart1();
+        if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && challenge2Solved == true && afterchallenge2Part2 == false) {
+            secondChallengePart2();
+        }
+    }
     if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && challenge1Solved == false) {
         firstChallengePart1();
         if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && challenge1Solved == true && afterchallenge1 == false) {
             firstChallengePart2();
-            if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == true && afterChoice3 == true && afterchallenge1 == true && afterchallenge2 == false) {
-                secondChallenge();
-            }
         }
     }
     if (afterChooseClass == true && afterChoice1 == true && afterChoice2 == false) {
@@ -251,6 +267,7 @@ btnSubmit.addEventListener('click', function(e) {
     }
     if(afterChooseClass == false) {
         assignClass(e);
+
     }
     if (playerInput.value == 'kill') {
         killPlayer();
@@ -270,9 +287,12 @@ function assignClass(e) {
     addText('> ' + playerChoice); 
     playerInput.value = '';
     updateStats();
+    SnS.innerHTML += `<br>> ${player.weapon} 
+    <br>> ${player.shield}`;
     displayLocation(calculateLocation());
     characterImage.src = player.sprite;
     afterChooseClass = true;
+    addText('<br>I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
 }
 
 function chooseClass() {
@@ -302,6 +322,7 @@ function updateStats() {
         // location.replace gevonden op https://www.tutorialspoint.com/How-to-redirect-to-another-webpage-using-JavaScript
         location.replace('deathscherm.html');
     }
+    
     // empty stats
     attack_points.innerHTML = '';
     defense_points.innerHTML = '';
@@ -315,23 +336,17 @@ function updateStats() {
     if (player.items.length > 0) {
         playerInventory.innerHTML = '';
         for (let i = 0; i < player.items.length; i++) {
-            playerInventory.innerHTML += '<br>' + player.items[i];
+            playerInventory.innerHTML += '<br>> ' + player.items[i];
         }
     }
 }
 
-//function changeLocation(imageLink) {}
-
 function phaseOne() {
     firstChoice();
-   // changeLocation();
 }
 
 
 function firstChoice() {
-    do {
-    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
-    } while (checkcommand(['left', 'right']) == false);
     let choice = playerInput.value.toLowerCase();
     console.log('choice:'+choice);
     if (choice.includes('left')) {
@@ -347,7 +362,7 @@ function firstChoice() {
         //changeLocation
         imgEnvironnement.src = crossRoads.img;
         // secondChoice();
-        addText(`4 options present themselves: 
+        addText(`<br>4 options present themselves: 
         <br>> beast: A hungry beast. Maybe I can sneak past it. 
         <br>> river: A poisonous river. I can see a sloop, though it does not look very sturdy. 
         <br>> cliff: A steep cliff. There is a bridge, but it looks like it might break if I try to cross it. 
@@ -368,11 +383,10 @@ function checkcommand(args) {
       });
     return false;
     });
-  }
-
-function goBack() {
-    // locale hub = variabele waarnaar teruggekeerd kan worden
 }
+
+// function goBack() {} // lokal hub waarnaar je terug kan gaan
+
 
 function killPlayer(){
     player.health = -1;
@@ -423,7 +437,7 @@ function secondChoice() {
 };
 
 function thirdChoice() {
-    addText(`I feel a cold hand on my shoulder: "I have never seen you around here, traveler", an old woman with a mysterious aura says to me. 
+    addText(`<br>I feel a cold hand on my shoulder: "I have never seen you around here, traveler", an old woman with a mysterious aura says to me. 
     <br>"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."
     <br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
     <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found*`);
@@ -431,8 +445,8 @@ function thirdChoice() {
     // initiate challange 1
     currentLocation.innerHTML = 'Challenge 1: Sudoku';
     imgEnvironnement.src = 'img/sudoku.png';
-    addText(`<br> Fill in the missing X\'s, find the missing word and you will be rewarded.
-    <br> Enter the numbers from left to right, top to bottom.
+    addText(`<br> the next Mysterious helper you meet says: "sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
+    <br> Vul de nummers in van links naar rechts, en van boven naar benede. 
     <br> +-----------------------------------+
     <br> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
     <br> +-----------------------------------+
@@ -443,6 +457,11 @@ function thirdChoice() {
 
 function firstChallengePart1() {
     choice = playerInput.value.toLowerCase();
+    if (challenge1TryCounter == 1) {
+        challenge1Solved = true;
+    addText('<br>ERROR: puzzle bypassed by too low intellingence');
+    return;
+    }
     if (choice.toLowerCase() == 'dead') {
         challenge1Solved = true;
     }
@@ -451,42 +470,40 @@ function firstChallengePart1() {
         addText('<br> Wrong! Please try again.');
         addText(`you have ${challenge1TryCounter} tries left`)
     }
-    if (challenge1TryCounter == 0) {
-        challenge1Solved = true;
-    addText('<br>ERROR: puzzle bypassed by too low intellingence');
-    }
 }
 
 function firstChallengePart2() {
-    const reward = items[Math.floor(Math.random() * (items.length - 1))]
-    items.splice(items.indexOf(reward), 1);
-    player.items.push(reward);
-    updateStats();
-    addText(`<br> Correct! You have earned your reward: ${reward}. Continue with your journey, youngling!`);
+    giveReward();
     afterchallenge1 = true;
+    addText(`<br> Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard.
+    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of c ourse. No accents, no capital letters. Just the number. If you failed, translate 'six'.)`);
 }
 
-function secondChallengePart(){
-    addText(`<br> Hola amigo. I have a challenge for you. Don\t worry, it\'s not too hard.
-    <br> How many tries did it take you to solve the previous puzzle? Answer with a number - in Spanhish of course. No accents, no capital letters. Just the number. If you failed, translate 'six'.)`);
+function secondChallengePart1(){
     let answer;
     switch (challenge1TryCounter) {
         case 5:
             answer = 'uno';
+            console.log('challeng1trycounter: 1')
             break;
         case 4:
             answer = 'dos';
+            console.log('challeng1trycounter: 2')
             break;
         case 3:
             answer = 'tres';
+            console.log('challeng1trycounter: 3')
             break;
         case 2:
             answer = 'quatro';
+            console.log('challeng1trycounter: 4')
             break;
         case 1:
             answer = 'cinco';
+            console.log('challeng1trycounter: 5')
         case 0:
             answer = 'seis';
+            console.log('challeng1trycounter: 6')
             break;
     }
 
@@ -494,20 +511,69 @@ function secondChallengePart(){
     if (choice.toLowerCase() == answer) {
         challenge2Solved = true;
     }
+    if (challenge2TryCounter == 1) {
+        challenge2Solved = true;
+        addText('<br>AY CARAMBA! puzzle bypassed by too low intellingence');
+        return;
+    }
     if (playerInput.value.toLowerCase() != answer){
         challenge2TryCounter--;
         addText('<br> Equivocado! Please try again.');
         addText(`you have ${challenge2TryCounter} tries left`)
+        return;
     }
-    if (challenge2TryCounter == 0) {
-        challenge2Solved = true;
-        addText('<br>AY CARAMBA! puzzle bypassed by too low intellingence');
-    }
+}
 
-    const reward = items[Math.floor(Math.random() * (items.length - 1))]
+function secondChallengePart2() {
+    addText('<br>Great job! You have solved the puzzle!')
+    giveReward();
+    afterchallenge2Part2 = true;
+    addText(`<br> An odd fellow asks you for help with a German word. Each piece of this jigsaw puzzle is a letter of the word. Can you put the pieces together and tell me the word?`);
+    imgEnvironnement.src = 'img/jigsaw.png';
+}
+
+function giveReward(){
+    const reward = items[Math.floor(Math.random() * (items.length - 1))];
     items.splice(items.indexOf(reward), 1);
     player.items.push(reward);
     updateStats();
-    addText(`<br> Bravo! You have certainly earned your reward: ${reward}!`);
-    afterchallenge1 = true;
+    return reward;
+}
+
+function thirdChallengePart1(){
+    answer = 'sagen!';
+    choice = playerInput.value.toLowerCase();
+    if (choice == answer) {
+        challenge3Solved = true;
+        return;
+    }
+    if (challenge3TryCounter == 1) {
+        challenge3Solved = true;
+        addText('<br>Das war nicht gut ... Here is your reward anyway');
+        return;
+    }
+    if (choice != answer){
+        challenge3TryCounter--;
+        addText('<br> Falsch! Please try again.');
+        addText(`you have ${challenge3TryCounter} tries left`)
+        return;
+    }
+}
+
+function thirdChallengePart2() {
+    addText(`<br> You passed the test, your reward is ${giveReward()}`)
+    afterchallenge3 = true;
+}
+
+function witchEncounter(){
+    addText(`<br>I head back to the old woman\'s hut. I knock on the door, but no one answers. I knock a second time. No answer. Luckily the door is not very sturdy. I take my ${player.shield} and bash the door in. As soon as I do that, she magically appears in front of me, surrounded by a dark aura.
+    <br>"Congratulations traveler. I did\'t think you would make it this far. Let me help you on your quest." <br>She starts speaking an ancient language, and I start to feel a little dizzy. My conciousness starts to fade, but before that happens I come back to my senses. I have never felt this good. 
+    <br>"I cast a spell on you. You will now be able to defeat your final foe, and go home. Good luck!"
+    <br>She disappears in a puff of smoke.`);
+    // apply buffs to player
+    player.hp += 30;
+    player.attack += 10;
+    player.defense += 10;
+    player.items = [];
+    updateStats();
 }

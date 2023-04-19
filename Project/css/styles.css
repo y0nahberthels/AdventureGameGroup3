@@ -24,6 +24,8 @@ p.txt__bottom {
     padding: 10px 5px 10px 5px;
     overflow: auto;
     scroll-behavior: initial;
+    text-anchor: end;
+    overflow-anchor: auto;
 }
 
 strong {
@@ -185,6 +187,7 @@ body {
 .p__end {
     font-size: 1.5em;
     font-weight: bold;
+    text-align: center;
 }
 
 /* GAME OVER */
@@ -206,7 +209,7 @@ body {
     transition: background 0.3s , color 00.3s;
 }
 
-
+/* https://www.youtube.com/watch?v=zWB219zf1og */
 
 @keyframes transitionOpen {
     from {
