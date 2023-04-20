@@ -3,14 +3,14 @@
 Todo: 
 - currentlocation is aligned, but not in the correct way. ✓
 - vorige tekst niet verwijderen ✓
-- <br> niet meer gebruiken
+- <br> niet meer gebruiken => lukt precies niet???
 - text letter per letter laten verschijnen ✘ zal waarschijnlijk niet lukken, te geavanceerd
 - checkCommand herwerken 
 - CSS autoscroll naar beneden ✓
 - einde(s) toevoegen
-- combell toevoegen
-- geluiden toeveogen
-- eindscherm ✓
+- combell toevoegen => via API
+- geluiden toevoegen
+- eindscherm 
 - player input opvangen en al dan niet conteroleren (email adres)
 
 Optioneel:
@@ -19,10 +19,11 @@ Optioneel:
 - 1 item op reserve voor naar de boss te gooien als extra damage
 - array van bijvoegelijke naamwoorden voor de boss ('enormous')
 - array van bijvoegelijke name voor de NPCs ('Gregor')
-- responsive maken van de game voor mobile
-- ending variabele
-- Boss healthbar
+- responsive maken van de game voor mobile +- done
+- ending variabele ✓
+- Boss healthbar ✓
 - eindscherm per einde
+- boss image veranderen
 
 
 FOUTEN:
@@ -31,6 +32,10 @@ FOUTEN:
 - einde toevoegen
 - healthbar fout ✓
 - town sudoku ✓
+- sudoku tries ✓
+- volgorde witch
+- tussen tough journey en cold hand entercontinue
+- errorchecking boss
 
 Ideen:
 - vijand voor de baas toevoegen voor combat te leren

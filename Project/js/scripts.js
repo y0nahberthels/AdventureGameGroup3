@@ -25,9 +25,6 @@ const healthBar = document.querySelector('#healthBar');
 const weapon = document.querySelector('.weapon');
 const shield = document.querySelector('.shield');
 
-const nameInput = document.getElementById('nameInput'); // player input moet ID zijn
-const pswInput = document.getElementById('pswInput'); // player input moet ID zijn
-
 let proceedToUrban = false;
 let choice;
 let afterChooseClass = false;
@@ -48,7 +45,6 @@ let challenge3TryCounter = 5;
 let afterchallenge3 = false;
 let challenge3Solved = false;
 let afterWitchEncounter = false;
-let afterBoss = false;
 let critSuccess = false;
 let bossMissed = false;
 let incDamage;
@@ -64,6 +60,11 @@ let eventListenerCheck = true;
 let afterTown = false;
 let afterfirstChallengeEncounter = false;
 let bossHealth;
+let afterWitchHut = false;
+let afterBeforeWitchHut = false;
+let afterEndingChoice = false;
+let preventPlayerAttack = false;
+let turn = 'player';
 // boss variables
 let boss;
 const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
@@ -108,22 +109,22 @@ const urbanDestinationsAr = ['medievalTown', 'steampunkCity', 'elvenLand', 'dwar
 const urbanDestinations = {
     medievalTown: {
         name: 'medieval town',
-        description: 'After a tough journey, you arrive in a medieval town, with cobblestone streets and old buildings. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.',
+        description: 'After a tough journey, I arrive in a medieval town, with cobblestone streets and old buildings. I can hear the sound of people talking and laughing. I feel a warm breeze on my face. For the first time in a couple days I finally feel safe. Even tough I want to rest for a moment, I know that I need to continue...',
         img: 'img/medievalTown.webp'
     },
     steampunkCity: {
         name: 'steampunk city',
-        description: 'After a tough journey, you arrive in a steampunk city, with old buildings and lots ofsteam engines. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.',
+        description: 'After a tough journey, I arrive in a steampunk city. Old buildings are mixed with new ones, and the sound of steam engines can be heard troughout the whole town. I can hear the sound of people talking and laughing. I feel a warm breeze on your face. For the first time since my journey started I am feeling somewhat relaxed. I want to rest a bit but I need to continue my journey.',
         img: 'img/steampunkCity.jpeg'
     },
     elvenLand: {
         name: 'elven land',
-        description: 'After a tough journey, you arrive in a elven land. You have heard a lot of stories about them, but never seen them. You look at the scene in awe. All the elves working together harmoniously is an oddly satisfying thing to watch. You order a meal, and after eating some delicious specialities, you decide to continue your journey.',
+        description: 'After a tough journey, I arrive in an elven land. I have heard a lot of stories about them, but never seen them myself. I look at the scene in awe. The many tall and slender elves are working together harmoniously is an oddly satisfying thing to watch. After having eaten a refreshing meal, it dawns on me that I need to continue my journey...',
         img: 'img/elvenLand.jpeg'
     },
     dwarvenVillage: {
         name: 'dwarven village',
-        description: 'After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.  ',
+        description: 'After a tough journey, I arrive in a dwarven village. Dwarves are working hard - as they are known for. I hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from within the many forges. After catching my breath and a tasty meal, I decide to continue my journey.  ',
         img: 'img/dwarvenVillage.webp'
     },
 };
@@ -136,27 +137,27 @@ const arLocations = ['forest', 'desert', 'meadow', 'swamp', 'ruins'];
 const startLocations = {
     forest: {
         name: 'forest',
-        description: 'Around you, is a dark forest, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        description: 'Around me is a dark forest, with dense vegetation. I can hear the sound of birds and insects, but can\'t see any of them. I feel a cold breeze on my face. I can\'t remember how I got here, but I know I have to get out of here.',
         image: 'img/Forest.jpg'
     },
     desert: {
         name: 'desert',
-        description: 'You woke up with a sore throat in a hot desert, surrounded by sand dunes and cacti. You can hear the sound of the wind and the sand. You feel a hot breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        description: 'I woke up with a sore throat in a hot desert, surrounded by sand dunes and cacti. I can hear the sound of the wind and the sand. I feel a hot breeze on my face. I can\'t remember how I got here, but I know I have to get out of here.',
         image: 'img/Desert.jpg'
     },
     meadow: {
         name: 'meadow',
-        description: 'When you woke up, you were surrounded by a beautiful meadow, with flowers and lucious green grass. You can hear the sound of the wind, the birds and some animals. You feel a chill breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        description: 'When I woke up, I was surrounded by a beautiful meadow, with flowers and lucious green grass. I can hear the sound of the wind, the birds and some animals. You feel a chill breeze on my face. I can\'t remember how I got here, but I know I have to get out of here.',
         image: 'img/Meadow.jpeg'
     },
     swamp: {
         name: 'swamp',
-        description: 'You find youself in a dark swamp, with dense vegetation. You can hear the sound of birds and insects, but you can\'t see anything. You feel a chilling breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        description: 'I find myself in a dark swamp, with dense vegetation. I can hear the sound of birds and insects, but can\'t see anything. I feel a chilling breeze on your face. I can\'t remember how I got here, but I know I have to get out of here.',
         image: 'img/Swamp.png'
     },
     ruins: {
         name: 'abandoned ruins',
-        description: 'When you woke up, you saw some ancient ruins, totally overgrown with vines. You don\'t recognise the style of the buildings, and wonder who built them and where you ended up... You can hear the sound of birds and insects, but can\'s see where it\'s coming from. You feel a cold breeze on your face. You can\'t remember how you got here, but you know you have to get out of here.',
+        description: 'When I woke up, I was surrounded by ancient ruins, totally overgrown with vines. I don\'t recognise the style of the buildings, and wonder who built them and where I ended up... I can hear the sound of birds and insects, but can\'s see where it\'s coming from. I feel a cold breeze on your face. I can\'t remember how I got here, but I know I have to get out of here.',
         image: 'img/Ruins.jpg'
     }
 };
@@ -197,7 +198,7 @@ const playerClasses = {
         vitality: 30,
         health: 100,
         sprite: 'img/Irishman.png',
-        weapon: 'mace',
+        weapon: 'ancient shamrock sword',
         shield: 'lucky clover shield',
         items: [],
     },
@@ -224,9 +225,9 @@ const endings = {
     },
     bad: {
         name: 'bad',
-        description: `You let yourself go. Was it curiousity or greed? You\'ll never know... As soon as you openen up the chest, the old woman appeared. 
-        <span class="italic">"Greedy bastard. How are you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as the next boss, until the next traveler frees you."</span>
-        Before even could react, you feel your body is starting to change. The pain is excruciating. Bones are being broken and rearranged to fit your new bodily composition. You don\'t want to accept this, but there is nothing you can do... You are now the next boss.`,
+        description: `I let myself go. Was it curiousity or greed? I\'ll never know... As soon as I opened up the chest, the  woman appeared. 
+        <span class="italic">"Greedy bastard. How are you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as the next boss, until the next traveler defeats you."</span>
+        Before I even could react, I felt my body starting to change. The pain was excruciating. Bones were being broken and rearranged to fit your new bodily composition. I don\'t want to accept this, but there is nothing I could do... I am now the next boss...`,
     }
 };
 
@@ -280,7 +281,21 @@ function incomingDamage(danger) {
 
 // this fuction add text to the textflield. Used during a dialogue, and everywhere else where new text is added
 function addText(text) {
+    //printLetterByLetter('textField', text, 1000);
     textField.innerHTML += `<p><br>${text}</p>`;
+}
+
+// function to print a string letter by letter
+function printLetterByLetter(destination, message, speed){
+    var i = 0;
+    var interval = setInterval(function(){
+        if (document.getElementById(destination) == null) {return;}
+        document.getElementById(destination).innerHTML += message.charAt(i);
+        i++;
+        if (i > message.length){
+            clearInterval(interval);
+        }
+    }, speed);
 }
 
 function storyLine() {
@@ -294,19 +309,20 @@ function storyLine() {
 
 // calculate a random location from the startLocations object to start the storyline
 function calculateLocation() {
-    console.log('urbanDestinationsAr' + urbanDestinationsAr);
     loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]];
     return loc;
 }
 
 //chooseClass();
 // location.replace('eindscherm.html')
+sessionStorage.clear();
 btnSubmit.addEventListener('click', function (e) {
     e.preventDefault();
     scrollToBottom();
     addText(`> ${playerInput.value}`);
     if (playerInput.value == 'kill') {
-        killPlayer();
+        player.health = 0;
+        updateStats();
     }
     if (playerInput.value == 'baguetteboss') {
         afterChoice1 = true;
@@ -321,60 +337,90 @@ btnSubmit.addEventListener('click', function (e) {
     if (playerInput.value == 'winners') {
         location.replace('eindscherm.html');
     }
-    if (playerTurnEnded == true && bossTurnEnded == false) {
-        console.log('DERDE LAYER');
-        bossTurn();
+    if (afterBossPart2 == true && afterEndingChoice == false) {
+        console.log('OKFLZPE?DF¨KPKPLSDF');
     }
-    if (afterBossPart1 == true && afterBossPart2 == false) {
-        console.log('EERSTE LAYER');
-        if (playerTurnEnded == false && bossTurnEnded == true && playerInput.value.toLowerCase() == 'attack') {
-            console.log('TWEEDE LAYER');
-            playerTurn();
+    if (turn == 'boss') {
+        if (afterBossPart1 == true && afterBossPart2 == false) {
+            if (preventPlayerAttack == true && playerTurnEnded == true && bossTurnEnded == false) {
+                console.log('DERDE LAYER');
+                bossTurn();
+
+            }
         }
+        return;
+    }
+    if (turn == 'player'){
+        if (afterBossPart1 == true && afterBossPart2 == false) {
+            console.log('EERSTE LAYER');
+            if (preventPlayerAttack == false && playerTurnEnded == false && bossTurnEnded == true && playerInput.value.toLowerCase() == 'attack') {
+                console.log('TWEEDE LAYER');
+                playerTurn();
+                
+            }
+            return;
+    }
+    }
+    if (afterWitchEncounter == true && afterBossPart1 == false) {
+        console.log('bossEncounter')
+        bossEncounter();
     }
     if (afterchallenge2Part2 == true && challenge3Solved == false) {
+        console.log('thirdChallengePart1')
         thirdChallengePart1();
         if (challenge3Solved == true && afterchallenge3 == false) {
+            console.log('thirdChallengePart2')
             thirdChallengePart2();
             if (afterchallenge3 == true && afterWitchEncounter == false) {
+                console.log('witchEncounter')
                 witchEncounter();
-                if (afterWitchEncounter == true && afterBossPart1 == false) {
-                    bossEncounter();
-                }
             }
         }
     }
     if (afterchallenge1 == true && challenge2Solved == false) {
+        console.log('secondChallengePart1');
         secondChallengePart1();
         if (challenge2Solved == true && afterchallenge2Part2 == false) {
+            console.log('secondChallengePart2');
             secondChallengePart2();
         }
     }
-    if (afterTown == true && afterChoice3 == true && challenge1Solved == false) {
+    if (afterfirstChallengeEncounter == true && challenge1Solved == false) {
+        console.log('firstChallengePart1');
         firstChallengePart1();
         if (challenge1Solved == true && afterchallenge1 == false) {
+            console.log('firstChallengePart2');
             firstChallengePart2();
         }
     }
-    if (afterTown == true && afterfirstChallengeEncounter == false) {
+    if (afterWitchHut == true && afterfirstChallengeEncounter == false) {
+        console.log('firstChallengeEncounter');
         firstChallengeEncounter();
     }
-    if (afterChoice3 == true && afterTown == false) {
-        townDialogue();
+    if (afterBeforeWitchHut == true &&afterWitchHut == false) {
+        witchHut();
+    }
+    if (afterChoice3 == true && afterBeforeWitchHut == false) {
+        beforeWitchHut();
     }
     if (afterChoice1 == true && afterChoice2 == false) {
+        console.log('secondChoice');
         secondChoice();
         if (afterChoice2 == true && afterChoice3 == false) {
+            console.log('thirdChoice')
             thirdChoice();
         }
     }
     if (afterChooseClass == true && afterChoice1 == false) {
+        console.log('firstChoice');
         firstChoice();
     }
     if (initializeStory == true && afterChooseClass == false) {
+        console.log('assignClass');
         assignClass(e);
     }
     if (initializeStory == false) {
+        console.log('chooseClass');
         chooseClass();
     }
     playerInput.value = '';
@@ -399,14 +445,12 @@ function assignClass(e) {
 function classErrorHandler() {
     let playerChoice = playerInput.value.toLowerCase();
     player = playerClasses[playerChoice];
-    console.log('playerlog1:' + player);
-    console.log('playerlog2:' + player);
     playerInput.value = '';
     updateStats();
 }
 
 function chooseClass() {
-    addText(`You wake up and remember who you are <span class="italic">(please select your class by typing one of the <span class="keyword">highlighted</span> words below)</span> 
+    addText(`I wake up, and remember who you are <span class="italic">(please select your class by typing one of the <span class="keyword">highlighted</span> words below)</span> 
     <br>> <span class="keyword">warrior</span>: ${playerClasses.warrior.description} 
     <br>> <span class="keyword">paladin</span>: ${playerClasses.paladin.description} 
     <br>> <span class="keyword">adventurer</span>: ${playerClasses.adventurer.description} 
@@ -416,7 +460,6 @@ function chooseClass() {
 
 // displays location in the top left corner
 function displayLocation(loc) {
-    console.log('loc:' + loc);
     // calculate location and display it
     calculateLocation();
     addText(loc.description);
@@ -426,16 +469,15 @@ function displayLocation(loc) {
 
 function updateStats() {
     healthpool.innerHTML = '';
-    console.log('player.health:' + player.health);
     if (player.health > 0) {
         healthpool.innerHTML = 'Health: ' + player.health;
     } else {
         healthpool.innerHTML = 'You died!';
         // location.replace gevonden op https://www.tutorialspoint.com/How-to-redirect-to-another-webpage-using-JavaScript
-        location.replace('deathscherm.html');
         if (sessionStorage.getItem(`deathMessage`) == null) {
             setDeathMessage("your health dropped to zero, you died");
         }
+        location.replace('deathscherm.html');
     }
 
     // empty stats
@@ -454,17 +496,16 @@ function updateStats() {
             playerInventory.innerHTML += '>' + player.items[i] + '<br>';
         }
     }
-    // if (afterWIc)
+    if (afterWitchEncounter){
+        player.items = [];
+    }
 }
 
 function firstChoice() {
     let choice = playerInput.value.toLowerCase();
-    console.log('choice:' + choice);
     if (choice.includes('left')) {
-        setDeathMessage('I jump down the cliff. I land head first on a rock and die.')
+        setDeathMessage('I jump down the cliff, hoping this is an easy option. This, however did not play out as planned. I landed head first on a rock and died.')
         killPlayer();
-        //addText(`I jump down the cliff. I land head first on a rock and die.`);
-        // todo herstart
         return;
     }
     if (choice.includes('right')) {
@@ -492,28 +533,27 @@ function killPlayer() {
 
 function secondChoice() {
     choice = playerInput.value.toLowerCase();
-    console.log(choice);
-    addText(` > ${choice} `);
     if (choice.includes('beast')) {
-        setDeathMessage('I try to sneak past the beast. It sees me and attacks me. I die. ');
+        setDeathMessage(`I try to sneak past the beast. It sees me and attacks me. I die.`);
         killPlayer(); // kill the player
+        return;
     }
     else if (choice.includes('river')) {
-        addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... I lose half of my health.');
+        addText(`I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... I lose ${player.health / 2} health.`);
         player.health -= player.health / 2; // removes 1/2 of the player HP
         updateStats();
         proceedToUrban = true;
 
     }
     else if (choice.includes('cliff')) {
-        addText('I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. I took a little bit of damage.');
+        addText(`I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. I took a little bit of damage. I lost ${player.health / 8} health`);
         player.health -= player.health / 8; // removes 1/8 of the player HP
         updateStats();
         proceedToUrban = true;
 
     }
     else if (choice.includes('desert')) {
-        addText('I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. I lose one fourth of my health.');
+        addText(`I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. I lose ${player.health / 4} health.`);
         player.health -= player.health / 4; // removes 1/4 of the player HP
         updateStats();
         proceedToUrban = true;
@@ -525,28 +565,36 @@ function secondChoice() {
     playerInput.value = '';
     afterChoice2 = true;
 };
-
+/*
 function townDialogue() {
+    addText(`<br> I look around for a little bit and relax.
+    <br>Press <span class="keyword italic">Enter</span> to continue your journey.`);
+    afterTown = true;
+}
+*/
+function thirdChoice() {
     // display random new location
-    console.log(urbanDestinations);
     const randomLocation = urbanDestinationsAr[Math.floor(Math.random() * (urbanDestinationsAr.length - 1))];
-    console.log(randomLocation);
     const urbanLoc = urbanDestinations[randomLocation];
-    console.log(urbanLoc);
     imgEnvironnement.src = urbanLoc.img;
     currentLocation.innerHTML = urbanLoc.name;
     addText(urbanLoc.description);
-    addText(`<p><br> I look around for a little bit and relax.
-    <br>Press <span clas="keyword italic">Enter</span> to continue your journey."<p>`);
-    afterTown = true;
+    afterChoice3 = true;
+    addText('<br>Press <span class="keyword italic">Enter</span> to continue.')
 }
 
-function thirdChoice() {
+function beforeWitchHut() {
     addText(`I feel a cold hand on my shoulder: <span class="italic">"I have never seen you around here, traveler"</span>, an old woman with a mysterious aura says to me. 
-    <br> <span class="italic">"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."</span>
-    <br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
-    <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found*`);
-    afterChoice3 = true;
+    <br> <span class="italic">"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."</span>`);
+    addText('<br>Press <span class="keyword italic">Enter</span> to continue.')
+    afterBeforeWitchHut = true;
+}
+
+function witchHut() {
+    imgEnvironnement.src = 'img/hut.webp';
+    addText(`<br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
+    <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found`)
+    afterWitchHut = true;
 }
 
 function firstChallengeEncounter() {
@@ -681,7 +729,7 @@ function thirdChallengePart2() {
     currentLocation.innerHTML = 'The old woman\'s hut';
     imgEnvironnement.src = 'img/hut.webp';
     addText(`I head back to the old woman\'s hut. I knock on the door, but no one answers. I knock a second time. No answer. Luckily the door is not very sturdy. I take my ${player.shield} and bash the door in. As soon as I do that, she magically appears in front of me, surrounded by a dark aura.
-    <br><span class="italic">"Congratulations traveler. I did\'t think you would make it this far. Let me help you on your quest."</span> 
+    <br><span class="italic">"Congratulations traveler. I didn\'t think you would make it this far. Let me help you on your quest."</span> 
     <br>She starts speaking an ancient language, and I start to feel a little dizzy. My conciousness starts to fade, but before that happens I come back to my senses. I have never felt this good. 
     <br><span class="italic">"I cast a spell on you. You will now be able to defeat your final foe, and go home. Good luck!"</span>
     <br>She disappears in a puff of smoke.`);
@@ -693,19 +741,8 @@ function witchEncounter() {
     player.health += 30;
     player.strength += 10;
     player.defense += 10;
-    selectBoss();
-    addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
-    The ${randomBossPreposition} ${boss.name} appears before me.`);
-    bossHealth= boss.health;
-    currentLocation.innerHTML = `${boss.environment}`;
-    imgEnvironnement.src = boss.img;
-    healthBar.classList.remove('hidden');
-    healthBar.innerHTML += ' ' + bossHealth;
+    addText('Press <span class="italic keyword">Enter</span> to continue...');
     afterWitchEncounter = true;
-    updateStats();
-    playerInventory.innerHTML = '';
-    updateBossHealth();
-    healthBar.style.backgroundColor = 'rgb(111, 111, 111)'
 }
 
 // choose random boss
@@ -715,6 +752,18 @@ function selectBoss() {
 
 // initiate boss e
 function bossEncounter() {
+    selectBoss();
+    addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
+    The ${randomBossPreposition} ${boss.name} appears before me.`);
+    bossHealth= boss.health;
+    currentLocation.innerHTML = `${boss.environment}`;
+    imgEnvironnement.src = boss.img;
+    healthBar.classList.remove('hidden');
+    healthBar.innerHTML += ' ' + bossHealth;
+    updateStats();
+    playerInventory.innerHTML = '';
+    updateBossHealth();
+    healthBar.style.backgroundColor = 'rgb(111, 111, 111)'
     addText(`Adrenaline rushes through my veins. I am ready to fight. I take out my ${player.weapon} and ${player.shield} and prepare for battle.`);
     addText(`I\'m ready to <span class="keyword">attack</span>`);
     afterBossPart1 = true;
@@ -726,6 +775,13 @@ function endGame() {
 
 
 function playerTurn() {
+    if (bossHealth == 0 || bossHealth < 0) {
+        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
+        afterBossPart2 = true;
+        hideBossBar();
+        addText('Press <span class="italic keyword">Enter</span> to continue...');
+        return;
+    }
     if (player.health == 0 || player.health < 0) {
         setDeathMessage('i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me. The last thing i see before i pass out is my enemy, smiling at me.')
         return;
@@ -743,12 +799,19 @@ function playerTurn() {
     updateBossHealth();
     playerTurnEnded = true;
     bossTurnEnded = false;
+    preventPlayerAttack = true;
+    turn = 'boss';
 }
+
+
 
 function bossTurn() {
     incomingDamage(boss.danger);
     if (bossHealth == 0 || bossHealth < 0) {
         addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
+        afterBossPart2 = true;
+        hideBossBar();
+        addText('Press <span class="italic keyword">Enter</span> to continue...');
         return;
     }
     addText(`The ${randomBossPreposition} ${boss.name} attacks you...`);
@@ -761,7 +824,9 @@ function bossTurn() {
     console.log('incoming damage implemented:' + incDamage)
     bossTurnEnded = true;
     playerTurnEnded = false;
-    addText(`Let\'s <span class="italic">attack</span>!"`);
+    addText(`Let\'s <span class="keyword">attack</span>!"`);
+    preventPlayerAttack = false;
+    turn = 'player';
 }
 
 //scrollToBottom gebruikt van https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
@@ -781,13 +846,19 @@ function scrollToBottom(timedelay = 0) {
     }, timedelay);
 }
 
+function relativePercentage(currentScore, originalScore){
+    const answer = parseInt((currentScore / originalScore)* 100);
+    return answer;
+}
+
 function updateBossHealth(){
-    //healthBar.innerHTML = boss.health;
-    
-    const healthPercentage = bossHealth + '%';
-    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"></div>
-    <div class="health_text">The ${randomBossPreposition} ${boss.name} HP:${boss.health}</div>` 
-    console.log('loghealth' + parhealthbar)
+    if (bossHealth < 0) {
+        healthBar.innerHTML = `<div class="health" style="width: ${relativePercentage(bossHealth, boss.health)}%"></div>
+        <div class="health_text">The ${randomBossPreposition} ${boss.name} HP: 0</div>` 
+    } else {
+    healthBar.innerHTML = `<div class="health" style="width: ${relativePercentage(bossHealth, boss.health)}%"></div>
+    <div class="health_text">The ${randomBossPreposition} ${boss.name} HP:${bossHealth}</div>` 
+    }
     //parhealthbar.innerHTML = randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
 }
 
@@ -843,4 +914,16 @@ updateTimer();
 function setDeathMessage(message) {
     // sessionstorage technique found on https://lage.us/Javascript-Pass-Variables-to-Another-Page.html
     sessionStorage.setItem("deathMessage", `${message}`);
+}
+
+function handleEnding(){}
+
+function getRandomEnding(){
+    //return ending = endings[Math.floor(Math.random() * endingsAr.length)];
+}
+
+function hideBossBar() {
+    document.querySelector('.health_text').classList.add('hidden');
+    healthBar.classList.add('hidden');
+    healthBar.style.backgroundColor = 'black'
 }

@@ -11,6 +11,8 @@ score.innerHTML = sessionScore;
 
 // add form event listener and get data from user
 form.addEventListener('submit', function (e) {
+    // empty error message to prevent previous error messages when needed
+    errormessage.innerHTML = "";
     // prevent default actions
     e.preventDefault();
     // get values from form
@@ -28,6 +30,9 @@ async function sendScore(playerEmail){
     params.append('teamId','6904sawk54d3ptz');
     params.append('playerEmail', playerEmail);
     params.append('playerScore', sessionScore);
-    const response = (await fetch('https://milquest.kevahu.net/addScore?'+ params.toString())).text();
-    errormessage.innerHTML = response;
+    const response = (await fetch('https://milquest.kevahu.net/addScore?'+ params.toString()));
+    console.log(response);
+    if(response.status === 200) {
+        errormessage.innerHTML = 'Email adres is niet correct. Probeer opnieuw.';
+    }
 }
