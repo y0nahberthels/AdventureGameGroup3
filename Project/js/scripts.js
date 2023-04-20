@@ -2,7 +2,7 @@
 
 
 // define arrays with needed variables
-const bossPrepositions = ['The Ancient', 'The Ominous', 'The Terrible', 'The Almighty', 'The Evil', 'The Dark', 'The Mighty', 'The Great', 'The Powerful', 'The Unstoppable', 'The Unbeatable', 'The Unkillable'];
+const bossPrepositions = ['Ancient', 'Ominous', 'Terrible', 'Almighty', 'Evil', 'Dark', 'Mighty', 'Great', 'Powerful', 'Unstoppable', 'Unbeatable', 'Unkillable'];
 const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
 const textField = document.querySelector('#txt__bottom');
 const playerInput = document.querySelector('#playerInput');
@@ -212,12 +212,12 @@ const endingsAr = ['good', 'bad'];
 const endings = {
     good: {
         name: 'good',
-        description: 'You choose to not take any chances, and with your remaining enery you drag yourself through the portal. You fall asleep almost immediatly, despite your sever wounds. In the morning you feel something on your face and shoot up immediatly. "Is it not over yet?" you think to yourself, but then you see your cat, looking at you very judgemental. Happy it\'s over, you pet your cat and go make yourself a coffee.',
+        description: 'You choose to not take any chances, and with your remaining enery you drag yourself through the portal. You fall asleep almost immediatly, despite your sever wounds. In the morning you feel something on your face and shoot up immediatly. <span class="italic">"Is it not over yet?"</span> you think to yourself, but then you see your cat, looking at you very judgemental. Happy it\'s over, you pet your cat and go make yourself a coffee.',
     },
     bad: {
         name: 'bad',
         description: `You let yourself go. Was it curiousity or greed? You\'ll never know... As soon as you openen up the chest, the old woman appeared. 
-        >>"Greedy bastard. How are you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as the next boss, until the next traveler frees you."
+        <span class="italic">"Greedy bastard. How are you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as the next boss, until the next traveler frees you."</span>
         Before even could react, you feel your body is starting to change. The pain is excruciating. Bones are being broken and rearranged to fit your new bodily composition. You don\'t want to accept this, but there is nothing you can do... You are now the next boss.`,
     }
 };
@@ -375,7 +375,7 @@ function assignClass(e) {
     displayLocation(calculateLocation());
     characterImage.src = player.sprite;
     afterChooseClass = true;
-    addText('I have two choices. At my left, there is a cliff. Maybe I can jump down and get out of here. At my right there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
+    addText('I have two choices. At my <span class="keyword">left</span>, there is a cliff. Maybe I can jump down and get out of here. At my <span class="keyword">right</span> there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
     UI.classList.remove('hidden');
 }
 
@@ -390,7 +390,7 @@ function classErrorHandler() {
 }
 
 function chooseClass() {
-    addText(`You wake up and remember who you are (please select one of the <span class="bold">highlighted</span> words)
+    addText(`You wake up and remember who you are <span class="italic">(please select your class by typing one of the <span class="keyword">highlighted</span> words below)</span> 
     <br>> <span class="keyword">warrior</span>: ${playerClasses.warrior.description} 
     <br>> <span class="keyword">paladin</span>: ${playerClasses.paladin.description} 
     <br>> <span class="keyword">adventurer</span>: ${playerClasses.adventurer.description} 
@@ -527,8 +527,8 @@ function secondChoice() {
 };
 
 function thirdChoice() {
-    addText(`I feel a cold hand on my shoulder: "I have never seen you around here, traveler", an old woman with a mysterious aura says to me. 
-    <br>>>"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."
+    addText(`I feel a cold hand on my shoulder: <span class="italic">"I have never seen you around here, traveler"</span>, an old woman with a mysterious aura says to me. 
+    <br> <span class="italic">"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."</span>
     <br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
     <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found*`);
 
@@ -536,8 +536,8 @@ function thirdChoice() {
     currentLocation.innerHTML = 'Challenge 1: Sudoku';
     imgEnvironnement.src = 'img/sudoku.png';
     addText(`the next Mysterious helper you meet says: 
-    <br>>>"Sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
-    <br> Vul de nummers in van links naar rechts, en van boven naar benede. 
+    <br><span class="italic">"Sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
+    <br> Vul de nummers in van links naar rechts, en van boven naar beneden."</span> 
     <br> +-----------------------------------+
     <br> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
     <br> +-----------------------------------+
@@ -564,12 +564,12 @@ function firstChallengePart1() {
 }
 
 function firstChallengePart2() {
-    addText(`>>"Your reward is: a ${giveReward()}"`);
+    addText(`<span class="italic">"Your reward is: a ${giveReward()}"</span>`);
     afterchallenge1 = true;
     // initiate challenge 2
     currentLocation.innerHTML = 'Challenge 2: The Spanish Test';
     addText(`After completing the previous challenge, I am aproached by a jovial looking man with an enormous sombrero; so big that it totally covers his face.`);
-    addText(`>>"Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard. Tell me how many tries it took you to complete the previous challenge - in Spanish of course. If you failed to solve it, tell me what "six" is in Spanish. Vamos!"`);
+    addText(`<span class="italic">"Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard. Tell me how many tries it took you to complete the previous challenge - in Spanish of course. If you failed to solve it, tell me what "six" is in Spanish. Vamos!"</span>`);
 }
 
 function secondChallengePart1(){
@@ -606,12 +606,12 @@ function secondChallengePart1(){
     }
     if (challenge2TryCounter == 1) {
         challenge2Solved = true;
-        addText('>>AY CARAMBA! puzzle bypassed by too low intellingence');
+        addText('<span class="italic"AY CARAMBA! puzzle bypassed by too low intellingence</span>');
         return;
     }
     if (playerInput.value.toLowerCase() != answer){
         challenge2TryCounter--;
-        addText('>>Equivocado! Please try again.');
+        addText('<span class="italic">Equivocado! Please try again.</span>');
         addText(`You have ${challenge2TryCounter} tries left`)
         return;
     }
@@ -619,12 +619,12 @@ function secondChallengePart1(){
 
 function secondChallengePart2() {
     addText('Great job! You have solved the puzzle!');
-    addText(`>>"You passed my challenge, your reward is a ${giveReward()}"`);
+    addText(`<span class="italic">"You passed my challenge, your reward is a ${giveReward()}"</span>`);
     afterchallenge2Part2 = true;
     // intiate challenge 3
     currentLocation.innerHTML = 'Challenge 3: The German Jigsaw';
     addText(`You are aproached by an odd looking fellow wearing lederhosen. He reeks of beer and sauerkraut. He says:
-    >>"Gutentag mein Freund. I need your help. I am very hungover and can\'t concentrate. I absolutely need to solve this puzzle. Can you do it for me? I will reward you handsomely. Combine all the letters into a word, and tell me what it is.`);
+    <br><span class="italic">"Gutentag mein Freund. I need your help. I am very hungover and can\'t concentrate. I absolutely need to solve this puzzle. Can you do it for me? I will reward you handsomely. Combine all the letters into a word, and tell me what it is.</span>`);
     imgEnvironnement.src = 'img/jigsaw.png';
 }
 
@@ -645,26 +645,26 @@ function thirdChallengePart1(){
     }
     if (challenge3TryCounter == 1) {
         challenge3Solved = true;
-        addText('>>Das war nicht gut ... Here is your reward anyway. The word was "sagen!"');
+        addText('<span class="italic">Das war nicht gut ... Here is your reward anyway. The word was "sagen!"</span>');
         return;
     }
     if (choice != answer){
         challenge3TryCounter--;
-        addText('>>Falsch! Please try again.');
+        addText('<span class="italic">Falsch! Please try again.</span>');
         addText(`you have ${challenge3TryCounter} tries left`)
         return;
     }
 }
 
 function thirdChallengePart2() {
-    addText(`You passed the test, your reward is ${giveReward()}`)
+    addText(`<span class="italic">"You passed the test, your reward is a ${giveReward()}</span>"`)
     afterchallenge3 = true;
     currentLocation.innerHTML = 'The old woman\'s hut';
     imgEnvironnement.src = 'img/hut.webp';
     addText(`I head back to the old woman\'s hut. I knock on the door, but no one answers. I knock a second time. No answer. Luckily the door is not very sturdy. I take my ${player.shield} and bash the door in. As soon as I do that, she magically appears in front of me, surrounded by a dark aura.
-    <br>"Congratulations traveler. I did\'t think you would make it this far. Let me help you on your quest." 
+    <br><span class="italic">"Congratulations traveler. I did\'t think you would make it this far. Let me help you on your quest."</span> 
     <br>She starts speaking an ancient language, and I start to feel a little dizzy. My conciousness starts to fade, but before that happens I come back to my senses. I have never felt this good. 
-    <br>"I cast a spell on you. You will now be able to defeat your final foe, and go home. Good luck!"
+    <br><span class="italic">"I cast a spell on you. You will now be able to defeat your final foe, and go home. Good luck!"</span>
     <br>She disappears in a puff of smoke.`);
 }
 
@@ -677,7 +677,7 @@ function witchEncounter(){
 
     selectBoss();
     addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
-    ${randomBossPreposition} ${boss.name} appears before me.`);
+    The ${randomBossPreposition} ${boss.name} appears before me.`);
     currentLocation.innerHTML = `${boss.environment}`;
     imgEnvironnement.src = boss.img;
     healthBar.classList.remove('hidden');
@@ -696,7 +696,7 @@ function selectBoss(){
 // initiate boss e
 function bossEncounter() {
     addText(`Adrenaline rushes through my veins. I am ready to fight. I take out my ${player.weapon} and ${player.shield} and prepare for battle.`);
-    addText(`? enter "attack" to attack ?`);
+    addText(`I\'m ready to <span class="keyword">attack</span>`);
     afterBossPart1 = true;
 }
 
@@ -729,7 +729,7 @@ function playerTurn() {
 function bossTurn() {
     incomingDamage(boss.danger);
     if (boss.health == 0 || boss.health < 0) {
-        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is dead!`);
+        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
         scoreToAPI();
         return;}
     addText(`The ${randomBossPreposition} ${boss.name} attacks you...`);
@@ -742,7 +742,7 @@ function bossTurn() {
     console.log('incoming damage implemented:' + incDamage)
     bossTurnEnded = true;
     playerTurnEnded = false;
-    addText(`? enter "attack" to attack ?`);
+    addText(`Let\'s <span class="italic">attack</span>!"`);
 }
 
 //scrollToBottom gebruikt van https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
@@ -766,7 +766,7 @@ function updateBossHealth(){
     //healthBar.innerHTML = boss.health;
     
     const healthPercentage = boss.health + '%';
-    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"><p id="par__healthbar">${randomBossPreposition} ${boss.name} HP:${boss.health}</p></div>` 
+    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"><p id="par__healthbar">The ${randomBossPreposition} ${boss.name} HP:${boss.health}</p></div>` 
     console.log('loghealth' + parhealthbar)
     //parhealthbar.innerHTML = randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
 }
