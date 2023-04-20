@@ -64,7 +64,7 @@ let afterWitchHut = false;
 let afterBeforeWitchHut = false;
 let afterEndingChoice = false;
 let preventPlayerAttack = false;
-let turn = 'player';
+let turn;
 // boss variables
 let boss;
 const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
@@ -78,6 +78,7 @@ const beasts = {
         danger: 30,
         health: 100,
         img: 'img/wolf.jpeg',
+        imgDead:'img/wolf_dead.jpeg',
         environment: 'forest',
     },
     troll: {
@@ -87,6 +88,7 @@ const beasts = {
         health: 110,
         img: 'img/troll.webp',
         environment: 'cave',
+        imgDead:'img/troll_dead.png',
     },
     dragon: {
         name: 'dragon',
@@ -95,6 +97,7 @@ const beasts = {
         health: '120',
         img: 'img/dragon.jpeg',
         environment: 'abanoned castle',
+        imgDead:'img/dragon_dead.jpeg',
     },
     crocodile: {
         name: 'crocodile',
@@ -103,6 +106,7 @@ const beasts = {
         health: 90,
         img: 'img/crocodile.jpg',
         environment: 'swamp',
+        imgDead:'img/crocodile_dead.jpg',
     }
 };
 const urbanDestinationsAr = ['medievalTown', 'steampunkCity', 'elvenLand', 'dwarvenVillage'];
@@ -342,24 +346,20 @@ btnSubmit.addEventListener('click', function (e) {
     }
     if (turn == 'boss') {
         if (afterBossPart1 == true && afterBossPart2 == false) {
-            if (preventPlayerAttack == true && playerTurnEnded == true && bossTurnEnded == false) {
                 console.log('DERDE LAYER');
                 bossTurn();
-
             }
-        }
         return;
     }
     if (turn == 'player'){
-        if (afterBossPart1 == true && afterBossPart2 == false) {
-            console.log('EERSTE LAYER');
             if (preventPlayerAttack == false && playerTurnEnded == false && bossTurnEnded == true && playerInput.value.toLowerCase() == 'attack') {
                 console.log('TWEEDE LAYER');
                 playerTurn();
-                
+            } else {
+                wrongCommand();
             }
+            playerInput.value = '';
             return;
-    }
     }
     if (afterWitchEncounter == true && afterBossPart1 == false) {
         console.log('bossEncounter')
@@ -767,6 +767,7 @@ function bossEncounter() {
     addText(`Adrenaline rushes through my veins. I am ready to fight. I take out my ${player.weapon} and ${player.shield} and prepare for battle.`);
     addText(`I\'m ready to <span class="keyword">attack</span>`);
     afterBossPart1 = true;
+    turn = 'player';
 }
 
 function endGame() {
@@ -775,13 +776,6 @@ function endGame() {
 
 
 function playerTurn() {
-    if (bossHealth == 0 || bossHealth < 0) {
-        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
-        afterBossPart2 = true;
-        hideBossBar();
-        addText('Press <span class="italic keyword">Enter</span> to continue...');
-        return;
-    }
     if (player.health == 0 || player.health < 0) {
         setDeathMessage('i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me. The last thing i see before i pass out is my enemy, smiling at me.')
         return;
@@ -801,19 +795,21 @@ function playerTurn() {
     bossTurnEnded = false;
     preventPlayerAttack = true;
     turn = 'boss';
+    if (bossHealth == 0 || bossHealth < 0) {
+        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
+        afterBossPart2 = true;
+        hideBossBar();
+        addText('Press <span class="italic keyword">Enter</span> to continue...');
+        imgEnvironnement.src = boss.imgDead;
+        return;
+    }
+    addText('<br>Press <span class="keyword italic">Enter</span> to continue.')
 }
 
 
 
 function bossTurn() {
     incomingDamage(boss.danger);
-    if (bossHealth == 0 || bossHealth < 0) {
-        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
-        afterBossPart2 = true;
-        hideBossBar();
-        addText('Press <span class="italic keyword">Enter</span> to continue...');
-        return;
-    }
     addText(`The ${randomBossPreposition} ${boss.name} attacks you...`);
     if (bossMissed == true) {
         addText(`!!!The ${randomBossPreposition} ${boss.name} MISSED!!!`);
@@ -821,12 +817,19 @@ function bossTurn() {
     if (bossMissed == false) {
         addText(`The boss hits you for ${incDamage} damage`);
     }
-    console.log('incoming damage implemented:' + incDamage)
     bossTurnEnded = true;
     playerTurnEnded = false;
-    addText(`Let\'s <span class="keyword">attack</span>!"`);
     preventPlayerAttack = false;
     turn = 'player';
+    if (bossHealth == 0 || bossHealth < 0) {
+        addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
+        afterBossPart2 = true;
+        hideBossBar();
+        addText('Press <span class="italic keyword">Enter</span> to continue...');
+        imgEnvironnement.src = boss.imgDead;
+        return;
+    }
+    addText(`Let\'s <span class="keyword">attack</span>!"`);
 }
 
 //scrollToBottom gebruikt van https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
@@ -854,7 +857,7 @@ function relativePercentage(currentScore, originalScore){
 function updateBossHealth(){
     if (bossHealth < 0) {
         healthBar.innerHTML = `<div class="health" style="width: ${relativePercentage(bossHealth, boss.health)}%"></div>
-        <div class="health_text">The ${randomBossPreposition} ${boss.name} HP: 0</div>` 
+        <div class="health_text">The ${randomBossPreposition} ${boss.name} HP: 0</div>`
     } else {
     healthBar.innerHTML = `<div class="health" style="width: ${relativePercentage(bossHealth, boss.health)}%"></div>
     <div class="health_text">The ${randomBossPreposition} ${boss.name} HP:${bossHealth}</div>` 
