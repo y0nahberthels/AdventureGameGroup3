@@ -8,9 +8,10 @@ Todo:
 - checkCommand herwerken 
 - CSS autoscroll naar beneden ✓
 - einde(s) toevoegen
-- combell testen
+- combell toevoegen
 - geluiden toeveogen
-- eindscherm
+- eindscherm ✓
+- player input opvangen en al dan niet conteroleren (email adres)
 
 Optioneel:
 - gif met idle animatie in plaats van statische tekst
@@ -25,11 +26,11 @@ Optioneel:
 
 
 FOUTEN:
-- game over melding
+- game over melding ✓
 - boss death fout
 - einde toevoegen
-- healthbar fout
-- town sudoku
+- healthbar fout ✓
+- town sudoku ✓
 
 Ideen:
 - vijand voor de baas toevoegen voor combat te leren

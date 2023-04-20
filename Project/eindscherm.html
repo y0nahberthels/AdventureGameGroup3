@@ -11,6 +11,13 @@
 
 <body>
     <header>
+        <h1>Congratulations on completing the game. You scored: <span id="score"></span></h1>
+        <p>Save your score by entering your account email below</p>
+        <form id="frm__login">
+            <input type text="text" placeholder="...@student.odisee.be" id="input__username">
+            <input type="submit" value="Save my score" id="btn__submit">
+        </form>
+        <p id="errorMessage"></p>
         <div class="div__logo">
             <img class="img__logo" width="auto" src="img/Afoundguy.gif" alt="">
             <p class="p__end">The End.<br>
@@ -23,6 +30,7 @@
             </nav>
         </div>
     </header>
+    <script src="js/apiHandling.js"></script>
 </body>
 
 </html>

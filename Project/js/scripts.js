@@ -3,7 +3,7 @@
 
 // define arrays with needed variables
 const bossPrepositions = ['Ancient', 'Ominous', 'Terrible', 'Almighty', 'Evil', 'Dark', 'Mighty', 'Great', 'Powerful', 'Unstoppable', 'Unbeatable', 'Unkillable'];
-const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio' ]; 
+const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio'];
 const textField = document.querySelector('#txt__bottom');
 const playerInput = document.querySelector('#playerInput');
 const timer = document.querySelector('#playTime');
@@ -58,7 +58,12 @@ let afterBossPart2 = false;
 let playerTurnEnded = false;
 let bossTurnEnded = true;
 let damage;
-
+let afterFallback = false;
+let initializeStory = false;
+let eventListenerCheck = true;
+let afterTown = false;
+let afterfirstChallengeEncounter = false;
+let bossHealth;
 // boss variables
 let boss;
 const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
@@ -99,24 +104,28 @@ const beasts = {
         environment: 'swamp',
     }
 };
-const urbanDestinationsAr = ['medievalTown', 'steampunkCity', 'elvenLand' ,'dwarvenVillage'];
+const urbanDestinationsAr = ['medievalTown', 'steampunkCity', 'elvenLand', 'dwarvenVillage'];
 const urbanDestinations = {
     medievalTown: {
         name: 'medieval town',
         description: 'After a tough journey, you arrive in a medieval town, with cobblestone streets and old buildings. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.',
-        img: 'img/medievalTown.webp'},
+        img: 'img/medievalTown.webp'
+    },
     steampunkCity: {
         name: 'steampunk city',
         description: 'After a tough journey, you arrive in a steampunk city, with old buildings and lots ofsteam engines. You can hear the sound of people talking and laughing. You feel a warm breeze on your face. For the first time in a couple days you finally feel safe. You want to rest a bit but you need to continue your journey.',
-        img: 'img/steampunkCity.jpeg'},
+        img: 'img/steampunkCity.jpeg'
+    },
     elvenLand: {
         name: 'elven land',
         description: 'After a tough journey, you arrive in a elven land. You have heard a lot of stories about them, but never seen them. You look at the scene in awe. All the elves working together harmoniously is an oddly satisfying thing to watch. You order a meal, and after eating some delicious specialities, you decide to continue your journey.',
-        img: 'img/elvenLand.jpeg'},
+        img: 'img/elvenLand.jpeg'
+    },
     dwarvenVillage: {
         name: 'dwarven village',
         description: 'After a tough journey, you arrive in a dwarven village. Dwarves are working hard - as they are known for. You hear the sound of pickaxes hitting the stone, and hammers beating down on hot iron from the ironsmiths. After catching your breath and a tasty meal, you decide to continue your journey.  ',
-        img: 'img/dwarvenVillage.webp'},
+        img: 'img/dwarvenVillage.webp'
+    },
 };
 
 const crossRoads = {
@@ -151,7 +160,6 @@ const startLocations = {
         image: 'img/Ruins.jpg'
     }
 };
-
 let player = null;
 const playerClasses = {
     warrior: {
@@ -169,7 +177,7 @@ const playerClasses = {
     },
     paladin: {
         name: 'paladin',
-        description:'a wise hermit with great magical knowledge',
+        description: 'a wise hermit with great magical knowledge',
         // 140 skillpoints to divide among stats
         strength: 30,
         luck: 30,
@@ -185,8 +193,8 @@ const playerClasses = {
         description: 'a lucky irishman blessed by Saint Patrick',
         // 140 skillpoints to divide among stats
         strength: 1000,
-        luck: 200,
-        vitality:30,
+        luck: 90,
+        vitality: 30,
         health: 100,
         sprite: 'img/Irishman.png',
         weapon: 'mace',
@@ -234,8 +242,8 @@ function closeWindow(event) {
 function randomChance() {
     const succes = false;
     const chanceInt = ((Math.round(Math.random * 100) + player.luck) / 2);
-    if (chanceInt >= 100){succes = true}
-    if (chanceInt < 100){succes = false}
+    if (chanceInt >= 100) { succes = true }
+    if (chanceInt < 100) { succes = false }
     return succes;
 }
 
@@ -285,17 +293,18 @@ function storyLine() {
 }
 
 // calculate a random location from the startLocations object to start the storyline
-function calculateLocation(){
-    console.log('urbanDestinationsAr'+urbanDestinationsAr);
+function calculateLocation() {
+    console.log('urbanDestinationsAr' + urbanDestinationsAr);
     loc = startLocations[arLocations[Math.floor(Math.random() * arLocations.length)]];
     return loc;
 }
 
-chooseClass();
+//chooseClass();
 // location.replace('eindscherm.html')
-btnSubmit.addEventListener('click', function(e) {
+btnSubmit.addEventListener('click', function (e) {
     e.preventDefault();
     scrollToBottom();
+    addText(`> ${playerInput.value}`);
     if (playerInput.value == 'kill') {
         killPlayer();
     }
@@ -341,11 +350,17 @@ btnSubmit.addEventListener('click', function(e) {
             secondChallengePart2();
         }
     }
-    if (afterChoice3 == true && challenge1Solved == false) {
+    if (afterTown == true && afterChoice3 == true && challenge1Solved == false) {
         firstChallengePart1();
         if (challenge1Solved == true && afterchallenge1 == false) {
             firstChallengePart2();
         }
+    }
+    if (afterTown == true && afterfirstChallengeEncounter == false) {
+        firstChallengeEncounter();
+    }
+    if (afterChoice3 == true && afterTown == false) {
+        townDialogue();
     }
     if (afterChoice1 == true && afterChoice2 == false) {
         secondChoice();
@@ -354,39 +369,40 @@ btnSubmit.addEventListener('click', function(e) {
         }
     }
     if (afterChooseClass == true && afterChoice1 == false) {
-        console.log('keuze 1 bereikt');
         firstChoice();
     }
-    if(afterChooseClass == false) {
+    if (initializeStory == true && afterChooseClass == false) {
         assignClass(e);
-
+    }
+    if (initializeStory == false) {
+        chooseClass();
     }
     playerInput.value = '';
 })
 
 function assignClass(e) {
-    try {classErrorHandler()}
-    catch(error) {
+    try { classErrorHandler() }
+    catch (error) {
         wrongCommand();
         return;
     }
-    weapon.innerHTML += `<img class="weapon_image" src="img/weapon.png" alt="weapon icon"> <p>${player.weapon}</p>`; 
+    weapon.innerHTML += `<img class="weapon_image" src="img/weapon.png" alt="weapon icon"> <p>${player.weapon}</p>`;
     shield.innerHTML += `<img class="shield_image" src="img/shield.png" alt="shield icon"> <p>${player.shield}</p>`;
     displayLocation(calculateLocation());
     characterImage.src = player.sprite;
     afterChooseClass = true;
+    afterFallback = true;
     addText('I have two choices. At my <span class="keyword">left</span>, there is a cliff. Maybe I can jump down and get out of here. At my <span class="keyword">right</span> there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
     UI.classList.remove('hidden');
 }
 
 function classErrorHandler() {
     let playerChoice = playerInput.value.toLowerCase();
-        player = playerClasses[playerChoice]; 
-        console.log('playerlog1:' + player);
-        console.log('playerlog2:' + player);
-        addText('> ' + playerChoice); 
-        playerInput.value = '';
-        updateStats();
+    player = playerClasses[playerChoice];
+    console.log('playerlog1:' + player);
+    console.log('playerlog2:' + player);
+    playerInput.value = '';
+    updateStats();
 }
 
 function chooseClass() {
@@ -395,11 +411,12 @@ function chooseClass() {
     <br>> <span class="keyword">paladin</span>: ${playerClasses.paladin.description} 
     <br>> <span class="keyword">adventurer</span>: ${playerClasses.adventurer.description} 
     <br>> <span class="keyword">irishman</span>: ${playerClasses.irishman.description}`);
+    initializeStory = true;
 }
 
 // displays location in the top left corner
 function displayLocation(loc) {
-    console.log('loc:'+loc);
+    console.log('loc:' + loc);
     // calculate location and display it
     calculateLocation();
     addText(loc.description);
@@ -409,15 +426,18 @@ function displayLocation(loc) {
 
 function updateStats() {
     healthpool.innerHTML = '';
-    console.log('player.health:'+ player.health);
+    console.log('player.health:' + player.health);
     if (player.health > 0) {
         healthpool.innerHTML = 'Health: ' + player.health;
     } else {
         healthpool.innerHTML = 'You died!';
         // location.replace gevonden op https://www.tutorialspoint.com/How-to-redirect-to-another-webpage-using-JavaScript
         location.replace('deathscherm.html');
+        if (sessionStorage.getItem(`deathMessage`) == null) {
+            setDeathMessage("your health dropped to zero, you died");
+        }
     }
-    
+
     // empty stats
     attack_points.innerHTML = '';
     defense_points.innerHTML = '';
@@ -439,10 +459,11 @@ function updateStats() {
 
 function firstChoice() {
     let choice = playerInput.value.toLowerCase();
-    console.log('choice:'+choice);
+    console.log('choice:' + choice);
     if (choice.includes('left')) {
+        setDeathMessage('I jump down the cliff. I land head first on a rock and die.')
         killPlayer();
-        addText(`I jump down the cliff. I land head first on a rock and die.`);
+        //addText(`I jump down the cliff. I land head first on a rock and die.`);
         // todo herstart
         return;
     }
@@ -459,104 +480,101 @@ function firstChoice() {
         afterChoice1 = true;
         return;
     }
+
+    // if none of the above commands were passed (and subsequently returned) the wrongcommand function is called
     wrongCommand();
 }
 
-function checkcommand(args) {
-    btnSubmit.addEventListener('click', function(e) {
-      e.preventDefault();
-      args.forEach(argument => {
-        if (playerInput.value == argument) {
-          console.log('correct command');
-          return true;
-        }
-      });
-    return false;
-    });
-}
-
-function killPlayer(){
+function killPlayer() {
     player.health = -1;
     updateStats();
 }
 
 function secondChoice() {
-        choice = playerInput.value.toLowerCase();
-        console.log(choice);
-        addText(` > ${choice} `);
-        if (choice.includes('beast')) {
-            addText('I try to sneak past the beast. It sees me and attacks me. I die. ');
-            killPlayer(); // kill the player
-        }
-        else if (choice.includes('river')) {
-            addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... You took some damage');
-            player.health -= player.health/2; // removes 1/2 of the player HP
-            updateStats();
-            proceedToUrban = true;
-
-        } 
-        else if (choice.includes('cliff')) {
-            addText('I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. You took some damage.');
-            player.health -= player.health/8; // removes 1/8 of the player HP
-            updateStats();
-            proceedToUrban = true;
-
-        }
-        else if (choice.includes('desert')) {
-            addText('I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. You took some damage');
-            player.health -= player.health/4; // removes 1/4 of the player HP
-            updateStats();
-            proceedToUrban = true;
-        } else {
-            wrongCommand();
-            return;
-        }
+    choice = playerInput.value.toLowerCase();
+    console.log(choice);
+    addText(` > ${choice} `);
+    if (choice.includes('beast')) {
+        setDeathMessage('I try to sneak past the beast. It sees me and attacks me. I die. ');
+        killPlayer(); // kill the player
+    }
+    else if (choice.includes('river')) {
+        addText('I enter the sloop and begin the row. It\'s not very sturdy, so the poisonous fluid quickly fills the bottom of the boat. I survive but am not doing well ... I lose half of my health.');
+        player.health -= player.health / 2; // removes 1/2 of the player HP
         updateStats();
-            
-        // display random new location
-        console.log(urbanDestinations);
-        const randomLocation = urbanDestinationsAr[Math.floor(Math.random() * (urbanDestinationsAr.length - 1))];
-        console.log(randomLocation);
-        const urbanLoc = urbanDestinations[randomLocation];
-        console.log(urbanLoc);
-        imgEnvironnement.src = urbanLoc.img;
-        currentLocation.innerHTML = urbanLoc.name;
-        addText(urbanLoc.description);
-        playerInput.value = '';
-        afterChoice2 = true;
+        proceedToUrban = true;
+
+    }
+    else if (choice.includes('cliff')) {
+        addText('I try to cross the bridge. It breaks as soon as I set foot on land. I stumble from shock and hurt my big toe. I took a little bit of damage.');
+        player.health -= player.health / 8; // removes 1/8 of the player HP
+        updateStats();
+        proceedToUrban = true;
+
+    }
+    else if (choice.includes('desert')) {
+        addText('I try to cross the desert. I get thirsty a lot earlier than expected. I surive by the skin of my teeth. I lose one fourth of my health.');
+        player.health -= player.health / 4; // removes 1/4 of the player HP
+        updateStats();
+        proceedToUrban = true;
+    } else {
+        wrongCommand();
+        return;
+    }
+    updateStats();
+    playerInput.value = '';
+    afterChoice2 = true;
 };
+
+function townDialogue() {
+    // display random new location
+    console.log(urbanDestinations);
+    const randomLocation = urbanDestinationsAr[Math.floor(Math.random() * (urbanDestinationsAr.length - 1))];
+    console.log(randomLocation);
+    const urbanLoc = urbanDestinations[randomLocation];
+    console.log(urbanLoc);
+    imgEnvironnement.src = urbanLoc.img;
+    currentLocation.innerHTML = urbanLoc.name;
+    addText(urbanLoc.description);
+    addText(`<p><br> I look around for a little bit and relax.
+    <br>Press <span clas="keyword italic">Enter</span> to continue your journey."<p>`);
+    afterTown = true;
+}
 
 function thirdChoice() {
     addText(`I feel a cold hand on my shoulder: <span class="italic">"I have never seen you around here, traveler"</span>, an old woman with a mysterious aura says to me. 
     <br> <span class="italic">"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."</span>
     <br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
     <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found*`);
-
-    // initiate challange 1
-    currentLocation.innerHTML = 'Challenge 1: Sudoku';
-    imgEnvironnement.src = 'img/sudoku.png';
-    addText(`the next Mysterious helper you meet says: 
-    <br><span class="italic">"Sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
-    <br> Vul de nummers in van links naar rechts, en van boven naar beneden."</span> 
-    <br> +-----------------------------------+
-    <br> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
-    <br> +-----------------------------------+
-    <br> | A | B | C | D | E | F | G | H | I |
-    <br> +-----------------------------------+`);
     afterChoice3 = true;
+}
+
+function firstChallengeEncounter() {
+        // initiate challenge 1
+        currentLocation.innerHTML = 'Challenge 1: Sudoku';
+        imgEnvironnement.src = 'img/sudoku.png';
+        addText(`the next Mysterious helper you meet says: 
+        <br><span class="italic">"Sorry mijn English is not ferry goed, dus ik spiek in Nederlands. Vind het magische woord aan de hand van de missende nummers en je zal rijkelijk beloond worden.
+        <br> Vul de nummers in van links naar rechts, en van boven naar beneden."</span> 
+        <br> +-----------------------------------+
+        <br> | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+        <br> +-----------------------------------+
+        <br> | A | B | C | D | E | F | G | H | I |
+        <br> +-----------------------------------+`);
+        afterfirstChallengeEncounter = true
 }
 
 function firstChallengePart1() {
     choice = playerInput.value.toLowerCase();
     if (challenge1TryCounter == 1) {
         challenge1Solved = true;
-    addText('ERROR: puzzle bypassed by too low intellingence');
-    return;
+        addText('ERROR: puzzle bypassed by too low intellingence');
+        return;
     }
     if (choice.toLowerCase() == 'dead') {
         challenge1Solved = true;
     }
-    if (playerInput.value.toLowerCase() != 'dead'){
+    if (playerInput.value.toLowerCase() != 'dead') {
         challenge1TryCounter--;
         addText('Wrong! Please try again.');
         addText(`you have ${challenge1TryCounter} tries left`)
@@ -568,11 +586,12 @@ function firstChallengePart2() {
     afterchallenge1 = true;
     // initiate challenge 2
     currentLocation.innerHTML = 'Challenge 2: The Spanish Test';
+    imgEnvironnement.src = 'img/spanish.png';
     addText(`After completing the previous challenge, I am aproached by a jovial looking man with an enormous sombrero; so big that it totally covers his face.`);
     addText(`<span class="italic">"Hola amigo. I have a challenge for you. Don\'t worry, it\'s not too hard. Tell me how many tries it took you to complete the previous challenge - in Spanish of course. If you failed to solve it, tell me what "six" is in Spanish. Vamos!"</span>`);
 }
 
-function secondChallengePart1(){
+function secondChallengePart1() {
     let answer;
     switch (challenge1TryCounter) {
         case 5:
@@ -606,10 +625,10 @@ function secondChallengePart1(){
     }
     if (challenge2TryCounter == 1) {
         challenge2Solved = true;
-        addText('<span class="italic"AY CARAMBA! puzzle bypassed by too low intellingence</span>');
+        addText('<span class="italic"AY CARAMBA! puzzle bypassed by too low intellingence></span>');
         return;
     }
-    if (playerInput.value.toLowerCase() != answer){
+    if (playerInput.value.toLowerCase() != answer) {
         challenge2TryCounter--;
         addText('<span class="italic">Equivocado! Please try again.</span>');
         addText(`You have ${challenge2TryCounter} tries left`)
@@ -628,7 +647,7 @@ function secondChallengePart2() {
     imgEnvironnement.src = 'img/jigsaw.png';
 }
 
-function giveReward(){
+function giveReward() {
     const reward = items[Math.floor(Math.random() * (items.length - 1))];
     items.splice(items.indexOf(reward), 1);
     player.items.push(reward);
@@ -636,7 +655,7 @@ function giveReward(){
     return reward;
 }
 
-function thirdChallengePart1(){
+function thirdChallengePart1() {
     let answer = 'sagen!';
     choice = playerInput.value.toLowerCase();
     if (choice == answer) {
@@ -646,9 +665,9 @@ function thirdChallengePart1(){
     if (challenge3TryCounter == 1) {
         challenge3Solved = true;
         addText('<span class="italic">Das war nicht gut ... Here is your reward anyway. The word was "sagen!"</span>');
-        return;
+        return; 
     }
-    if (choice != answer){
+    if (choice != answer) {
         challenge3TryCounter--;
         addText('<span class="italic">Falsch! Please try again.</span>');
         addText(`you have ${challenge3TryCounter} tries left`)
@@ -669,27 +688,28 @@ function thirdChallengePart2() {
 }
 
 // initiates witch encounter, where player turns in items and receives buffs
-function witchEncounter(){
+function witchEncounter() {
     // apply buffs to player
     player.health += 30;
     player.strength += 10;
     player.defense += 10;
-
     selectBoss();
     addText(`Now feeling very strong and refreshed, I continue on my path. Suddenly, while walking through a ${boss.environment}, 
     The ${randomBossPreposition} ${boss.name} appears before me.`);
+    bossHealth= boss.health;
     currentLocation.innerHTML = `${boss.environment}`;
     imgEnvironnement.src = boss.img;
     healthBar.classList.remove('hidden');
-    healthBar.innerHTML += ' ' + boss.health;
+    healthBar.innerHTML += ' ' + bossHealth;
     afterWitchEncounter = true;
     updateStats();
+    playerInventory.innerHTML = '';
     updateBossHealth();
     healthBar.style.backgroundColor = 'rgb(111, 111, 111)'
 }
 
 // choose random boss
-function selectBoss(){
+function selectBoss() {
     boss = beasts[beastsAr[Math.floor(Math.random() * beastsAr.length)]];
 }
 
@@ -707,8 +727,7 @@ function endGame() {
 
 function playerTurn() {
     if (player.health == 0 || player.health < 0) {
-        addText('i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me');
-        addText(`The last thing i see before i pass out is my enemy, smiling at me.`);
+        setDeathMessage('i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me. The last thing i see before i pass out is my enemy, smiling at me.')
         return;
     }
     addText(`I swing my sword at the enemy...`);
@@ -720,7 +739,7 @@ function playerTurn() {
     if (critSuccess == false) {
         addText(`HIT! I attack the boss for ${outDamage} damage`);
     }
-    boss.health -= outDamage;
+    bossHealth -= outDamage;
     updateBossHealth();
     playerTurnEnded = true;
     bossTurnEnded = false;
@@ -728,10 +747,10 @@ function playerTurn() {
 
 function bossTurn() {
     incomingDamage(boss.danger);
-    if (boss.health == 0 || boss.health < 0) {
+    if (bossHealth == 0 || bossHealth < 0) {
         addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
-        scoreToAPI();
-        return;}
+        return;
+    }
     addText(`The ${randomBossPreposition} ${boss.name} attacks you...`);
     if (bossMissed == true) {
         addText(`!!!The ${randomBossPreposition} ${boss.name} MISSED!!!`);
@@ -765,46 +784,11 @@ function scrollToBottom(timedelay = 0) {
 function updateBossHealth(){
     //healthBar.innerHTML = boss.health;
     
-    const healthPercentage = boss.health + '%';
-    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"><p id="par__healthbar">The ${randomBossPreposition} ${boss.name} HP:${boss.health}</p></div>` 
+    const healthPercentage = bossHealth + '%';
+    healthBar.innerHTML = `<div class="health" style="width: ${healthPercentage}"></div>
+    <div class="health_text">The ${randomBossPreposition} ${boss.name} HP:${boss.health}</div>` 
     console.log('loghealth' + parhealthbar)
     //parhealthbar.innerHTML = randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
-}
-
-let playerName;
-let playerPassword;
-/*
-document.getElementById('frm__login').addEventListener('submit', function(e){
-    // prevent default actions
-    e.preventDefault();
-    // get values from form
-    playerName = document.getElementById('input__username').value;
-    playerPassword = document.getElementById('input__password').value;
-
-    location.replace('index.html');
-});
-*/ 
-
-let playerID;
-
-let username = 'yonah.berthels@student.odisee.be';
-
-async function handleAPI(username, score){
-
-    const test = document.getElementById('test');
-    let collectionId;
-    var requestOptions = {
-        method: 'GET',
-        redirect: 'follow'
-    };
-    
-    fetch(`https://lucas-miserez.be/api/collections/person/records?filter=(email='example@student.odisee.be'|| email='${username}')`, requestOptions)
-        .then(response => response.json())
-        .then(result => {
-            collectionId = result.items[0].collectionId;
-            console.log('collectionId: ' + collectionId);
-        })
-        .catch(error => console.log('error', error));    
 }
 
 function wrongCommand() {
@@ -817,67 +801,46 @@ let score = 10000; // Initialize the score to 10000
 
 // Function to update the timer display
 function updateTimer() {
-  let minutes = Math.floor(timeRemaining / 60);
-  let seconds = timeRemaining % 60;
-  timer.innerHTML = `Time Remaining: 
+    let minutes = Math.floor(timeRemaining / 60);
+    let seconds = timeRemaining % 60;
+    timer.innerHTML = `Time Remaining: 
   <br>${minutes}m ${seconds}s`;
 }
 
 // Function to update the score display
 function updateScore() {
-  //document.getElementById('score').textContent = `Score: ${score}`;
+    //document.getElementById('score').textContent = `Score: ${score}`;
 }
 
 // Function to decrease time remaining and update score
 function decreaseTime() {
-  timeRemaining--;
+    timeRemaining--;
 
-  // Update the score based on the time remaining
-  if (timeRemaining > 0) {
-    score -= Math.floor(10000 / timeLimit); // Decrease score as time passes
-  } else {
-    score += 10; // Award a fixed score of 10 when time is up
-  }
+    // Update the score based on the time remaining
+    if (timeRemaining > 0) {
+        score -= Math.floor(10000 / timeLimit); // Decrease score as time passes
+        sessionStorage.setItem('score', `${score}`)
+    } else {
+        score += 10; // Award a fixed score of 10 when time is up
+    }
 
-  updateTimer();
-  updateScore();
+    updateTimer();
 
-  // Check if time is up
-  if (timeRemaining === 0) {
-    clearInterval(timerInterval); // Stop the timer
-    location.replace('deathscherm.html');
-  }
+    // Check if time is up
+    if (timeRemaining === 0) {
+        clearInterval(timerInterval); // Stop the timer
+        location.replace('deathscherm.html');
+        setDeathMessage('You ran out of time');
+        eventListenerCheck = false;
+    }
 }
 // Start the timer
 let timerInterval = setInterval(decreaseTime, 1000); // Decrease time every second
 
 // Call the initial update functions
 updateTimer();
-updateScore();
 
-function scoreToAPI(){
-    let bearer = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb2xsZWN0aW9uSWQiOiJ6NDFjcnl6cDNyeTJkdngiLCJleHAiOjE2ODIwMDI4NjMsImlkIjoiMzBlanU3b2E2c2ozenI4IiwidHlwZSI6ImF1dGhSZWNvcmQifQ.oGV7khG71nu0D3cNrc3LWrhhkv-alKvOD0BrDjlqDbM"
-
-var myHeaders = new Headers();
-myHeaders.append("Authorization", `Bearer ${bearer}`);
-myHeaders.append("Content-Type", "application/json");
-
-var raw = JSON.stringify({
-  "player": "30eju7oa6sj3zr8",
-  "plaats": 1,
-  "score": `${score}`,
-  "score_is_van_team": "6904sawk54d3ptz"
-});
-
-var requestOptions = {
-  method: 'POST',
-  headers: myHeaders,
-  body: raw,
-  redirect: 'follow'
-};
-
-fetch("https://lucas-miserez.be/api/collections/score/records", requestOptions)
-  .then(response => response.text())
-  .then(result => console.log(result))
-  .catch(error => console.log('error', error));
+function setDeathMessage(message) {
+    // sessionstorage technique found on https://lage.us/Javascript-Pass-Variables-to-Another-Page.html
+    sessionStorage.setItem("deathMessage", `${message}`);
 }
