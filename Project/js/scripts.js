@@ -68,11 +68,6 @@ let proceedToEnding = false;
 let boss;
 const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
 
-
-if (sessionStorage.getItem('checkbool') == null) {
-    location.replace('startscherm.html');
-}
-
 let loc;
 const beastsAr = ['wolf', 'troll', 'dragon', 'crocodile'];
 const beasts = {
