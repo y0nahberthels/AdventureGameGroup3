@@ -1,6 +1,5 @@
 'use strict';
 
-
 // define arrays with needed variables
 const bossPrepositions = ['Ancient', 'Ominous', 'Terrible', 'Almighty', 'Evil', 'Dark', 'Mighty', 'Great', 'Powerful', 'Unstoppable', 'Unbeatable', 'Unkillable'];
 const items = ['USB-stick', 'dish', 'metal stick', 'pencil', 'slipper', 'ice cube', 'iPod nano', 'brocolli', 'WIFI router', 'Raspberri Pi', 'eyeliner', 'eraser', 'rubber duck', 'PS2', 'truck', 'scooter', 'rock', 'button', 'cork', 'chalk', 'sandal', 'radio'];
@@ -53,7 +52,6 @@ let afterBossPart2 = false;
 let playerTurnEnded = false;
 let bossTurnEnded = true;
 let damage;
-let afterFallback = false;
 let initializeStory = false;
 let eventListenerCheck = true;
 let afterTown = false;
@@ -69,6 +67,11 @@ let proceedToEnding = false;
 // boss variables
 let boss;
 const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
+
+
+if (sessionStorage.getItem('checkbool') == null) {
+    location.replace('startscherm.html');
+}
 
 let loc;
 const beastsAr = ['wolf', 'troll', 'dragon', 'crocodile'];
@@ -311,8 +314,9 @@ sessionStorage.clear();
 btnSubmit.addEventListener('click', function (e) {
     e.preventDefault();
     scrollToBottom();
+    // developer testing commands (you won't know these commands unless you see the code)
     addText(`> ${playerInput.value}`);
-    if (playerInput.value == 'kill') {
+    if (playerInput.value == 'baguettekillplayer') {
         player.health = 0;
         updateStats();
     }
@@ -326,9 +330,10 @@ btnSubmit.addEventListener('click', function (e) {
         challenge2Solved = true;
         afterchallenge2Part2 = true;
     }
-    if (playerInput.value == 'winners') {
+    if (playerInput.value == 'baguettewinners') {
         location.replace('eindscherm.html');
     }
+    // checks for storyline progression that call functions if checks are passed (more readable if you read from bottom to top)
     if (aftermadeEndingchoice == true && proceedToEnding == false) {
         endGame();
     }
@@ -417,32 +422,45 @@ btnSubmit.addEventListener('click', function (e) {
         console.log('chooseClass');
         chooseClass();
     }
+    // clear player input
     playerInput.value = '';
 })
 
 function assignClass(e) {
-    try { classErrorHandler() }
+    // handler for a wrong command !!Very important!!
+    try {classErrorHandler() }
     catch (error) {
         wrongCommand();
         return;
     }
+    // adds weapon and shield images to UI
     weapon.innerHTML += `<img class="weapon_image" src="img/weapon.png" alt="weapon icon"> <p>${player.weapon}</p>`;
     shield.innerHTML += `<img class="shield_image" src="img/shield.png" alt="shield icon"> <p>${player.shield}</p>`;
+    // displays the location returned by calculateLocation
     displayLocation(calculateLocation());
+    // adds the character sprite to the UI
     characterImage.src = player.sprite;
+    // sets the bool to true for storyline checks
     afterChooseClass = true;
-    afterFallback = true;
+    // text for the next choice
     addText('I have two choices. At my <span class="keyword">left</span>, there is a cliff. Maybe I can jump down and get out of here. At my <span class="keyword">right</span> there is a pathway leading to the horizon. I can\'t see where it leads, but it looks like a good idea to follow it.');
+    // displays the fully filled in UI
     UI.classList.remove('hidden');
 }
 
+// function that handles errors for the assignclass function
 function classErrorHandler() {
+    // declares and assigns the variable: playerchoice
     let playerChoice = playerInput.value.toLowerCase();
+    // sets the player variable to the selected class in the playerClasses object
     player = playerClasses[playerChoice];
+    // clears the player input field
     playerInput.value = '';
+    // calls the updateStats function
     updateStats();
 }
 
+// displays the class options to choose from
 function chooseClass() {
     addText(`I wake up, and remember who you are <span class="italic">(please select your class by typing one of the <span class="keyword">highlighted</span> words below)</span> 
     <br>> <span class="keyword">warrior</span>: ${playerClasses.warrior.description} 
@@ -454,14 +472,16 @@ function chooseClass() {
 
 // displays location in the top left corner
 function displayLocation(loc) {
-    // calculate location and display it
+    // calculate location and display the location image and description
     calculateLocation();
     addText(loc.description);
     currentLocation.innerHTML = loc.name;
     imgEnvironnement.src = loc.image;
 }
 
+// function that updates the player statistics
 function updateStats() {
+    // clears UI health displays
     healthpool.innerHTML = '';
     if (player.health > 0) {
         healthpool.innerHTML = 'Health: ' + player.health;
@@ -582,7 +602,8 @@ function beforeWitchHut() {
 function witchHut() {
     imgEnvironnement.src = 'img/hut.webp';
     addText(`<br> Even though she gives off some weird vibes, I really need the rest. So I follow her back to her hut
-    <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found`)
+    <br> *after a restfull night you wake up refreshed (+ 50hp), you grab a snack, but the stranger is no where to be found`);
+    addText('<br>Press <span class="keyword italic">Enter</span> to continue.')
     afterWitchHut = true;
 }
 
