@@ -535,10 +535,12 @@ function firstChoice() {
     wrongCommand();
 }
 
+  // developer function to test the killing of the player
 function killPlayer() {
     player.health = -1;
     updateStats();
 }
+
 
 function secondChoice() {
     choice = playerInput.value.toLowerCase();
@@ -700,6 +702,7 @@ function secondChallengePart2() {
     imgEnvironnement.src = 'img/jigsaw.png';
 }
 
+// give  a random reward
 function giveReward() {
     const reward = items[Math.floor(Math.random() * (items.length - 1))];
     items.splice(items.indexOf(reward), 1);
@@ -707,6 +710,7 @@ function giveReward() {
     updateStats();
     return reward;
 }
+
 
 function thirdChallengePart1() {
     let answer = 'sagen!';
@@ -775,11 +779,12 @@ function bossEncounter() {
     turn = 'player';
 }
 
+// function that ends the game
 function endGame() {
     location.replace('eindscherm.html');
 }
 
-
+// function for the player's turn in the cilbat system
 function playerTurn() {
     if (player.health == 0 || player.health < 0) {
         setDeathMessage('i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me. The last thing i see before i pass out is my enemy, smiling at me.')
@@ -812,7 +817,7 @@ function playerTurn() {
 }
 
 
-
+// function for the boss's turn in the combat system
 function bossTurn() {
     incomingDamage(boss.danger);
     addText(`The ${randomBossPreposition} ${boss.name} attacks you...`);
@@ -859,6 +864,7 @@ function relativePercentage(currentScore, originalScore){
     return answer;
 }
 
+// funtion to update the boss's health in the combat system
 function updateBossHealth(){
     if (bossHealth < 0) {
         healthBar.innerHTML = `<div class="health" style="width: ${relativePercentage(bossHealth, boss.health)}%"></div>
@@ -870,6 +876,7 @@ function updateBossHealth(){
     //parhealthbar.innerHTML = randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
 }
 
+    // function to display the wrongcommand
 function wrongCommand() {
     addText(' Wrong command, please enter a valid command');
 }
@@ -923,9 +930,7 @@ function setDeathMessage(message) {
     // sessionstorage technique found on https://lage.us/Javascript-Pass-Variables-to-Another-Page.html
     sessionStorage.setItem("deathMessage", `${message}`);
 }
-
-function handleEnding(){}
-
+// function that sets up the choice for the ending
 function getRandomEnding(){
     addText(`I immerse victoriously after a though battle with the ${boss.name} and I\'m now presented with a dilema. I see a <span class="keyword italic">portal</span> opening that will lead me home, the place I have
     longed for this entire journey, but in the corner of my eye I see a shiny <span class="keyword italic">treasure</span> chest and I\'m very curious to take a look at it. What interests me more?
@@ -933,12 +938,14 @@ function getRandomEnding(){
     afterEndingChoice = true;
 }
 
+// function to hide the boss's healthbar after combat is over
 function hideBossBar() {
     document.querySelector('.health_text').classList.add('hidden');
     healthBar.classList.add('hidden');
     healthBar.style.backgroundColor = 'black'
 }
 
+// function to handle the player's choice of ending
 function endingChoice() {
     if (playerInput.value == 'treasure') {
         addText(endings.bad.description);
