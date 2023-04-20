@@ -46,7 +46,6 @@ strong {
 /* image */
 
 .img__place {
-    background-image: url(../img/d14a6a3d2604eb01c1fe465e15b7a05f_t.jpeg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -334,6 +333,12 @@ body {
 #par__healthbar {
     color: rgb(0, 0, 0);
     font-size: initial;
+}
+
+#endingType {
+    font-size: larger;
+    color: red;
+    font-weight: bolder;
 }
 
 /*responsive CSS by hiding imgenvironnement on smaller screens (e.g. mobile phone)*/

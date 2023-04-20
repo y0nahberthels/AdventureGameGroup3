@@ -6,7 +6,8 @@ const errormessage = document.querySelector('#errorMessage');
 let playerName;
 let userID;
 let scoreID;
-
+const endingType = document.querySelector('#endingType');
+endingType.innerHTML = `${sessionStorage.getItem('ending')}`
 score.innerHTML = sessionScore;
 
 // add form event listener and get data from user
@@ -32,7 +33,7 @@ async function sendScore(playerEmail){
     params.append('playerScore', sessionScore);
     const response = (await fetch('https://milquest.kevahu.net/addScore?'+ params.toString()));
     console.log(response);
-    if(response.status === 200) {
+    if(response.status === 404) {
         errormessage.innerHTML = 'Email adres is niet correct. Probeer opnieuw.';
     }
 }

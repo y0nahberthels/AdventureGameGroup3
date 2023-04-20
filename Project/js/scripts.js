@@ -19,7 +19,6 @@ const btnSubmit = document.querySelector('#btnSubmit');
 const characterImage = document.querySelector('#character_image');
 const imgEnvironnement = document.querySelector('#imgEnvironnement');
 const playerInventory = document.querySelector('#inventoryContent');
-const SnS = document.querySelector('.armory_inventory');
 const UI = document.querySelector('.content__right');
 const healthBar = document.querySelector('#healthBar');
 const weapon = document.querySelector('.weapon');
@@ -65,6 +64,8 @@ let afterBeforeWitchHut = false;
 let afterEndingChoice = false;
 let preventPlayerAttack = false;
 let turn;
+let aftermadeEndingchoice = false;
+let proceedToEnding = false;
 // boss variables
 let boss;
 const randomBossPreposition = bossPrepositions[Math.floor(Math.random() * (bossPrepositions.length - 1))];
@@ -75,7 +76,7 @@ const beasts = {
     wolf: {
         name: 'wolf',
         description: 'A giant wolf, with sharp teeth and claws. It looks hungry.',
-        danger: 30,
+        danger: 40,
         health: 100,
         img: 'img/wolf.jpeg',
         imgDead:'img/wolf_dead.jpeg',
@@ -102,7 +103,7 @@ const beasts = {
     crocodile: {
         name: 'crocodile',
         description: 'A huge crocodile, so big I can barely believe my eyes. It can, without a doubt, swallow me whole.',
-        danger: 20,
+        danger: 50,
         health: 90,
         img: 'img/crocodile.jpg',
         environment: 'swamp',
@@ -172,7 +173,7 @@ const playerClasses = {
         description: 'a strong veteran that has won many battles',
         // 140 skillpoints to divide among stats
         strength: 80,
-        luck: 30,
+        luck: 90,
         vitality: 30,
         health: 100,
         sprite: 'img/Warrior.png',
@@ -185,7 +186,7 @@ const playerClasses = {
         description: 'a wise hermit with great magical knowledge',
         // 140 skillpoints to divide among stats
         strength: 30,
-        luck: 30,
+        luck: 80,
         vitality: 80,
         health: 150,
         sprite: 'img/Paladin.png',
@@ -197,8 +198,8 @@ const playerClasses = {
         name: 'irishman',
         description: 'a lucky irishman blessed by Saint Patrick',
         // 140 skillpoints to divide among stats
-        strength: 1000,
-        luck: 90,
+        strength: 90,
+        luck: 150,
         vitality: 30,
         health: 100,
         sprite: 'img/Irishman.png',
@@ -210,8 +211,8 @@ const playerClasses = {
         name: 'adventurer',
         description: 'a daring, well rounded adventurer',
         // 140 skillpoints to divide among stats
-        strength: 46,
-        luck: 47,
+        strength: 80,
+        luck: 110,
         vitality: 47,
         health: 120,
         sprite: 'img/Adventurer.png',
@@ -230,8 +231,8 @@ const endings = {
     bad: {
         name: 'bad',
         description: `I let myself go. Was it curiousity or greed? I\'ll never know... As soon as I opened up the chest, the  woman appeared. 
-        <span class="italic">"Greedy bastard. How are you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as the next boss, until the next traveler defeats you."</span>
-        Before I even could react, I felt my body starting to change. The pain was excruciating. Bones were being broken and rearranged to fit your new bodily composition. I don\'t want to accept this, but there is nothing I could do... I am now the next boss...`,
+        <span class="italic">"Greedy bastard. How dare you lay eyes upon my treasure, let alone touch it? You will pay for this, you will pay with your life! You will be reincarnated as my next monster, until the next traveler defeats you."</span>
+        Before I even could react, I felt my body starting to change. The pain was excruciating. Bones were being broken and rearranged to fit your new monster-like body. I don\'t want to accept this, but there is nothing I could do... I am now cursed to fight losts travelers forever...`,
     }
 };
 
@@ -285,22 +286,9 @@ function incomingDamage(danger) {
 
 // this fuction add text to the textflield. Used during a dialogue, and everywhere else where new text is added
 function addText(text) {
-    //printLetterByLetter('textField', text, 1000);
     textField.innerHTML += `<p><br>${text}</p>`;
 }
 
-// function to print a string letter by letter
-function printLetterByLetter(destination, message, speed){
-    var i = 0;
-    var interval = setInterval(function(){
-        if (document.getElementById(destination) == null) {return;}
-        document.getElementById(destination).innerHTML += message.charAt(i);
-        i++;
-        if (i > message.length){
-            clearInterval(interval);
-        }
-    }, speed);
-}
 
 function storyLine() {
     // choose player class
@@ -341,8 +329,14 @@ btnSubmit.addEventListener('click', function (e) {
     if (playerInput.value == 'winners') {
         location.replace('eindscherm.html');
     }
+    if (aftermadeEndingchoice == true && proceedToEnding == false) {
+        endGame();
+    }
+    if (afterEndingChoice == true && aftermadeEndingchoice == false) {
+        endingChoice();
+    }
     if (afterBossPart2 == true && afterEndingChoice == false) {
-        console.log('OKFLZPE?DF¨KPKPLSDF');
+        getRandomEnding();
     }
     if (turn == 'boss') {
         if (afterBossPart1 == true && afterBossPart2 == false) {
@@ -565,13 +559,7 @@ function secondChoice() {
     playerInput.value = '';
     afterChoice2 = true;
 };
-/*
-function townDialogue() {
-    addText(`<br> I look around for a little bit and relax.
-    <br>Press <span class="keyword italic">Enter</span> to continue your journey.`);
-    afterTown = true;
-}
-*/
+
 function thirdChoice() {
     // display random new location
     const randomLocation = urbanDestinationsAr[Math.floor(Math.random() * (urbanDestinationsAr.length - 1))];
@@ -580,10 +568,11 @@ function thirdChoice() {
     currentLocation.innerHTML = urbanLoc.name;
     addText(urbanLoc.description);
     afterChoice3 = true;
-    addText('<br>Press <span class="keyword italic">Enter</span> to continue.')
+    addText('<br>Press <span class="keyword italic">Enter</span> to continue.');
 }
 
 function beforeWitchHut() {
+    imgEnvironnement.src = 'img/witch.jpg'
     addText(`I feel a cold hand on my shoulder: <span class="italic">"I have never seen you around here, traveler"</span>, an old woman with a mysterious aura says to me. 
     <br> <span class="italic">"I can help you on your quest when you obtain 3 items. Only you know which items you seek. I left a gift for you at the big tree in the town square. Have a rest at my place to regain some health. Trust me you will need it."</span>`);
     addText('<br>Press <span class="keyword italic">Enter</span> to continue.')
@@ -832,7 +821,7 @@ function bossTurn() {
     addText(`Let\'s <span class="keyword">attack</span>!"`);
 }
 
-//scrollToBottom gebruikt van https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
+//scrollToBottom technique found on https://gist.github.com/sabapathygithub/e6ca2c0fd06c21c5fb608b9a172ca3c4
 function scrollToBottom(timedelay = 0) {
     var scrollId;
     var height = 0;
@@ -922,11 +911,34 @@ function setDeathMessage(message) {
 function handleEnding(){}
 
 function getRandomEnding(){
-    //return ending = endings[Math.floor(Math.random() * endingsAr.length)];
+    addText(`I immerse victoriously after a though battle with the ${boss.name} and I\'m now presented with a dilema. I see a <span class="keyword italic">portal</span> opening that will lead me home, the place I have
+    longed for this entire journey, but in the corner of my eye I see a shiny <span class="keyword italic">treasure</span> chest and I\'m very curious to take a look at it. What interests me more?
+    `);
+    afterEndingChoice = true;
 }
 
 function hideBossBar() {
     document.querySelector('.health_text').classList.add('hidden');
     healthBar.classList.add('hidden');
     healthBar.style.backgroundColor = 'black'
+}
+
+function endingChoice() {
+    if (playerInput.value == 'treasure') {
+        addText(endings.bad.description);
+        aftermadeEndingchoice = true;
+        addText('<br>Press <span class="keyword italic">Enter</span> to continue.');
+        sessionStorage.setItem('ending', 'bad ending');
+        return;
+    }
+    if (playerInput.value == 'portal') {
+        addText(endings.good.description);
+        aftermadeEndingchoice = true;
+        addText('<br>Press <span class="keyword italic">Enter</span> to continue.');
+        sessionStorage.setItem('ending', 'good ending')
+        return;
+    } 
+    {
+        wrongCommand();
+    }
 }
