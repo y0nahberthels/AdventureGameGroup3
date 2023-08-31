@@ -171,7 +171,7 @@ const playerClasses = {
         description: 'a strong veteran that has won many battles',
         // 140 skillpoints to divide among stats
         strength: 80,
-        luck: 90,
+        luck: 80,
         vitality: 30,
         health: 100,
         sprite: 'img/Warrior.png',
@@ -197,7 +197,7 @@ const playerClasses = {
         description: 'a lucky irishman blessed by Saint Patrick',
         // 140 skillpoints to divide among stats
         strength: 90,
-        luck: 150,
+        luck: 170,
         vitality: 30,
         health: 100,
         sprite: 'img/Irishman.png',
