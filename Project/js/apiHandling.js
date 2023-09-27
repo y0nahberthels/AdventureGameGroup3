@@ -1,4 +1,3 @@
-/*
 const form = document.getElementById('frm__login');
 // sessionStorage technique found on https://lage.us/Javascript-Pass-Variables-to-Another-Page.html
 const sessionScore = sessionStorage.getItem('score');
@@ -38,4 +37,3 @@ async function sendScore(playerEmail){
         errormessage.innerHTML = 'Email adres is niet correct. Probeer opnieuw.';
     }
 }
-*/

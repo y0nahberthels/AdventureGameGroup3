@@ -784,11 +784,7 @@ function endGame() {
     location.replace('eindscherm.html');
 }
 
-// Q: where should i implement the updateplayerhealth function within the playerturn function?
-
-
-
-// function for the player's turn in the combat system
+// function for the player's turn in the cilbat system
 function playerTurn() {
     if (player.health == 0 || player.health < 0) {
         setDeathMessage('i feel a sharp pain. i look down to see my legs lying on the floor 10 metres in front of me. The last thing i see before i pass out is my enemy, smiling at me.')
@@ -808,7 +804,6 @@ function playerTurn() {
     playerTurnEnded = true;
     bossTurnEnded = false;
     preventPlayerAttack = true;
-    updatePlayerHealth();
     turn = 'boss';
     if (bossHealth == 0 || bossHealth < 0) {
         addText(`The boss roars loadly as he falls to the ground. The ${randomBossPreposition} ${boss.name} is <span class="dead">dead</span>!`);
@@ -871,7 +866,6 @@ function relativePercentage(currentScore, originalScore){
 
 // funtion to update the boss's health in the combat system
 function updateBossHealth(){
-    flashBossHealthBar();
     if (bossHealth < 0) {
         healthBar.innerHTML = `<div class="health" style="width: ${relativePercentage(bossHealth, boss.health)}%"></div>
         <div class="health_text">The ${randomBossPreposition} ${boss.name} HP: 0</div>`
@@ -881,21 +875,6 @@ function updateBossHealth(){
     }
     //parhealthbar.innerHTML = randomBossPreposition + ' ' +  boss.name + ' ' + boss.health; // bron chatgpt
 }
-// apply the same (relativepercentage) technique to the player's healthbar
-function updatePlayerHealth(){
-    flashPlayerHealthBar();
-    if (player.health < 0) {
-        healthpool.innerHTML = `<div class="health" style="width: ${relativePercentage(player.health, player.health)}%"></div>
-        <div class="health_text">Your HP: 0</div>`
-    } else {
-    healthpool.innerHTML = `<div class="health" style="width: ${relativePercentage(player.health, player.health)}%"></div>
-    <div class="health_text">Your HP: ${player.health}</div>`
-    }
-}
-// q: where should i implement this function within the playerturn function?
-// a: i implemented it in the playerturn function, right after the player attacks
-
-
 
     // function to display the wrongcommand
 function wrongCommand() {
@@ -986,39 +965,3 @@ function endingChoice() {
         wrongCommand();
     }
 }
-
-// have the bosshealthbar flash white when the player attacks
-function flashBossHealthBar() {
-    healthBar.style.backgroundColor = 'white';
-    setTimeout(function () {
-        healthBar.style.backgroundColor = 'rgb(111, 111, 111)'
-    }, 300);
-}
-// how should i implement the flashbosshealthbar function you just wrote?
-// have the bosshealthbar flash white when the player attacks
-function flashPlayerHealthBar() {
-    healthpool.style.backgroundColor = 'white';
-    setTimeout(function () {
-        healthpool.style.backgroundColor = 'rgb(111, 111, 111)'
-    }, 300);
-}
-// Q: how did i make the bosshealthbar smaller when the boss takes damage?
-// A: i used the relativePercentage function to calculate the percentage of the boss's health and then used that percentage to set the width of the healthbar
-// q: where did i use this?
-// a: in the updateBossHealth function
-//q: why is the healthbar2 above the health stat?
-//a: because the healthbar2 is a child of the healthpool div, and the healthpool div is above the health stat
-//q: to where exactly do i need to move the healthbar2 div?
-//a: to the healthpool div
-// rewrite the html for the healthbar2 div so that i need only copy paste it into the healthpool div
-
-
-
-
-
-
-
-
-
-
-
